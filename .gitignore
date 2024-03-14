@@ -1,0 +1,8 @@
+.vscode/
+.vs/
+x64/
+
+ManagementSystem/src/ManagemenSystem.vcxproj
+ManagementSystem/src/ManagementSystem.vcxproj.filters
+ManagemenSystem/src/ManagementSystem.vcxproj.user
+
