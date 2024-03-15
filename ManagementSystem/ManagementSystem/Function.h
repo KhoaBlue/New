@@ -55,8 +55,9 @@ struct Student : User
     string FirstName;
     string LastName;
     string Class;
-    string* courseID[5];
-    Mark Result[5];
+    string SocialID;
+    string* courseID = new string[7];
+    Mark *Result = new Mark[7];
 };
 
 struct Course {
@@ -71,7 +72,7 @@ struct Course {
 };
 
 struct Class {
-    string name;
+    string Name;
     Node<Student>* stHead = nullptr;
 };
 
