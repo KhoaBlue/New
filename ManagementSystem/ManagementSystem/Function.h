@@ -46,7 +46,11 @@ struct User {
     bool Gender;
     Date DOB;
     string Email;
-    void getDOB() {};
+    void getDOB(string dob) {
+        DOB.Day = stoi(dob.substr(0, 2));
+        DOB.Month = stoi(dob.substr(3, 2));
+        DOB.Year = stoi(dob.substr(6, 4));
+    };
 };
 
 struct Student : User
@@ -93,3 +97,5 @@ struct SchoolYear {
 
 void createNewClasses(Class *&NewClasses, int &numOfClass);
 void createSchoolYear(SchoolYear &sy);
+void loadStudentFromFile(Node<Student>*& pHead, string filename);
+void loadStaffFromFile(Node<User>*& pHead);
