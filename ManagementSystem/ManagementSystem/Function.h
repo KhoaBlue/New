@@ -85,6 +85,11 @@ struct SchoolYear {
     string Name;
     string start_date;
     string end_date;
-    Semester* SemestersList[3];
-    Class* ClassesList;
+    Semester* SemestersList;
+    int NumOfClasses = 50;
+    Class* ClassesList = new Class[NumOfClasses];
 };
+
+
+void createNewClasses(Class *&NewClasses, int &numOfClass);
+void createSchoolYear(SchoolYear &sy);
