@@ -1,12 +1,8 @@
 #include "Function.h"
 
 
-void createNewClasses(Class *&NewClasses, int &numOfClass)
+void addNewClasses(Class *&NewClasses, int &numOfClass)
 {
-	cout << "Please input the number of new Classes";
-	cin >> numOfClass;
-	NewClasses = new Class[numOfClass];
-	cout << "Please input the file name: ";
 	string filename;
 	getline(cin,filename);
 	for (int i = 0; i < numOfClass; ++i) {
@@ -15,22 +11,40 @@ void createNewClasses(Class *&NewClasses, int &numOfClass)
 	}
 }
 
-void createSchoolYear(SchoolYear &sy)
+void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses)
 {
+	int NumNewClasses;
+	cout << "Please input the number of new Classes";
+	cin >> NumNewClasses;
+	sy.NumOfClasses = NumNewClasses + NumOldClasses;
+	sy.ClassesList = new Class[sy.NumOfClasses];
+	cout << "Please input the file name: ";
+	addNewClasses(sy.ClassesList, NumNewClasses);
+	for (int i = 0; i < NumOldClasses; ++i) {
+		sy.ClassesList[i + NumNewClasses] = OldClasses[i];
+	}
+}
+
+void createSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses)
+{
+	cout << "Input Name of School Year: ";
 	getline(cin, sy.Name);
+	cout << "Input Start date: ";
 	getline(cin, sy.start_date);
+	cout << "Input End date: ";
 	getline(cin, sy.end_date);
-	int numOfNewClasses;
-	Class *NewClasses;
-	createNewClasses(NewClasses, numOfNewClasses);
-	Class *tmp = new Class[sy.NumOfClasses + numOfNewClasses];
-	for (int i = 0; i < sy.NumOfClasses; ++i) {
-		tmp[i] = sy.ClassesList[i];
+	addClasses(sy, OldClasses, NumOldClasses);
+	sy.SemestersList = new Semester[3];
+	for (int i = 0; i < 3; ++i) {
+		sy.SemestersList[i].CoursesList = new Course[100];
 	}
-	for (int i = 0; i < numOfNewClasses; ++i) {
-		tmp[i + sy.NumOfClasses] = NewClasses[i];
+}
+
+void deleteSchoolYear(SchoolYear &sy)
+{
+	for (int i = 0; i < 3; ++i) {
+		delete[] sy.SemestersList[i].CoursesList;
 	}
+	delete[] sy.SemestersList;
 	delete[] sy.ClassesList;
-	sy.ClassesList = tmp;
-	sy.NumOfClasses += numOfNewClasses;
 }

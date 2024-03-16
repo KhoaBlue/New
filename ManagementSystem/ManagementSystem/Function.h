@@ -81,15 +81,18 @@ struct Semester {
     string end_date;
     Course* CoursesList;
 };
+
 struct SchoolYear {
     string Name;
     string start_date;
     string end_date;
     Semester* SemestersList;
     int NumOfClasses = 50;
-    Class* ClassesList = new Class[NumOfClasses];
+    Class* ClassesList;
 };
 
 
-void createNewClasses(Class *&NewClasses, int &numOfClass);
-void createSchoolYear(SchoolYear &sy);
+void addNewClasses(Class *&NewClasses, int &numOfClass);
+void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void createSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void deleteSchoolYear(SchoolYear &sy);
