@@ -56,8 +56,8 @@ struct Student : User
     string LastName;
     string Class;
     string SocialID;
-    string* courseID = new string[7];
-    Mark *Result = new Mark[7];
+    //string* courseID = new string[7];
+    //Mark *Result = new Mark[7];
 };
 
 struct Course {
@@ -94,5 +94,12 @@ struct SchoolYear {
 
 void addNewClasses(Class *&NewClasses, int &numOfClass);
 void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
-void createSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void createSchoolYear(SchoolYear *&SyList, int &numSY);
 void deleteSchoolYear(SchoolYear &sy);
+void loadClassList(Class *&ClassList, int &numClass, string filename);
+void loadSchoolYear(SchoolYear &sy);
+void loadSchoolYearList(SchoolYear *&SyList, int &numSY);
+void updateClassList(Class *ClassList, int numClass, string filename);
+void updateSchoolYear(SchoolYear *SyList);
+void updateSchoolYearList(SchoolYear *SyList, int numSY);
