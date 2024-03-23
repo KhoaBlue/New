@@ -60,8 +60,8 @@ struct Student : User
     string LastName;
     string Class;
     string SocialID;
-    //string* courseID = new string[7];
-    //Mark *Result = new Mark[7];
+    string* courseID = new string[7];
+    Mark *Result = new Mark[7];
 };
 
 struct Course {
@@ -84,6 +84,7 @@ struct Semester {
     string start_date;
     string end_date;
     Course* CoursesList;
+    int numCourses;
 };
 
 struct SchoolYear {
@@ -107,6 +108,13 @@ void loadSchoolYear(SchoolYear &sy);
 void loadSchoolYearList(SchoolYear *&SyList, int &numSY);
 void updateClassList(Class *ClassList, int numClass, string filename);
 void updateSchoolYear(SchoolYear *SyList);
+void updateSchoolYearList(SchoolYear *SyList, int numSY);
+void initData(SchoolYear& currentSchoolYear);
+
+void addCourse(SchoolYear& schoolYear);
+void addStudentToCourse(SchoolYear& schoolYear);
+//View a list of his/her courses. He/she will study these courses in this semester.
+void viewListCourse(const Student& st, SchoolYear schoolYear);
 void updateSchoolYearList(SchoolYear *SyList, int numSY);
 
 void createNewClasses(Class *&NewClasses, int &numOfClass);
