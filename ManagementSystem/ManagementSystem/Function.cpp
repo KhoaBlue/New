@@ -1,7 +1,8 @@
 ﻿#include "Function.h"
+#include <string>
+#include <sstream>
 
-
-void addNewClasses(Class *&NewClasses, int &numOfClass)
+void addNewClasses(Class*& NewClasses, int& numOfClass)
 {
 	cout << "Please input the file name: ";
 	string filename;
@@ -153,9 +154,9 @@ void displayClassesList(Node <Class>*& pHead, string Name, int& n) {
 // Method view list course of student
 void viewListCourse(const Student& st, SchoolYear schoolYear) {
     cout << "View list course of student: " << st.FirstName << " " << st.LastName << endl;
-    for (int i = 0; i < schoolYear.numOfSemesters; ++i) {
+    for (int i = 0; i < 3; ++i) {
         const Semester& semester = schoolYear.SemestersList[i];
-        for (int j = 0; j < semester.numOfCourses; ++j) {
+        for (int j = 0; j < semester.numCourses; ++j) {
             const Course& course = semester.CoursesList[j];
             for (int k = 0; k < 7; ++k) {
                 if (st.courseID[k] == course.ID) {
@@ -193,9 +194,9 @@ bool isValid(const SchoolYear& schoolYear, const Course& newCourse) {
         return false;
     }
 
-    for (int i = 0; i < schoolYear.numOfSemesters; ++i) {
+    for (int i = 0; i < 3; ++i) {
         const Semester& semester = schoolYear.SemestersList[i];
-        for (int j = 0; j < semester.numOfCourses; ++j) {
+        for (int j = 0; j < semester.numCourses; ++j) {
             if (semester.CoursesList[j].ID == newCourse.ID) {
                 cout << "Error: Course ID already exists" << endl;
                 return false;
@@ -222,7 +223,7 @@ void addCourse(SchoolYear& schoolYear) {
 
     Semester se;
     // Find se with info
-    for (int i = 0; i < schoolYear.numOfSemesters; i++) {
+    for (int i = 0; i < 3; i++) {
         if (schoolYear.SemestersList[i].start_date == startYear && schoolYear.SemestersList[i].end_date == endYear) {
             se = schoolYear.SemestersList[i];
             break;
@@ -233,8 +234,8 @@ void addCourse(SchoolYear& schoolYear) {
         se.CoursesList = new Course[1];
     }
     else {
-        Course* newCoursesList = new Course[se.numOfCourses + 1];
-        for (int i = 0; i < se.numOfCourses; ++i) {
+        Course* newCoursesList = new Course[se.numCourses + 1];
+        for (int i = 0; i < se.numCourses; ++i) {
             newCoursesList[i] = se.CoursesList[i];
         }
         delete[] se.CoursesList;
@@ -261,7 +262,7 @@ void addCourse(SchoolYear& schoolYear) {
         return;
     }
 
-    se.CoursesList[se.numOfCourses++] = newCourse;
+    se.CoursesList[se.numCourses++] = newCourse;
 
     string fileName = "../data/SchoolYears/" + startYear + "-" + endYear + "/" + semesterName + "/CourseList.csv";
     cout << "fileName: " << fileName << endl;
@@ -311,8 +312,8 @@ void addStudentToCourse(SchoolYear& currentSchoolYear) {
 
     // Find course with courseID
     Course co;
-    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
-        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < currentSchoolYear.SemestersList[i].numCourses; j++) {
             cout << "Check courseId = " << currentSchoolYear.SemestersList[i].CoursesList[j].ID << endl;
             if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
                 co = currentSchoolYear.SemestersList[i].CoursesList[j];
@@ -395,8 +396,8 @@ void addStudentToCourse(SchoolYear& currentSchoolYear) {
     }
 
     // Update course in semester
-    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
-        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < currentSchoolYear.SemestersList[i].numCourses; j++) {
             if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
                 currentSchoolYear.SemestersList[i].CoursesList[j] = co;
                 break;
@@ -419,5 +420,71 @@ void addStudentToCourse(SchoolYear& currentSchoolYear) {
 // Đọc thông tin của một học kỳ từ các tệp tin
 void initData(SchoolYear& currentSchoolYear) {
     // Init data từ hệ thống file hiện tại 
+}
+void loadStudentFromFile(Node<Student> *&pHead, string filename) {
+	ifstream fin;
+	fin.open("../data/ClassesStudents/" + filename + "/" + filename + ".csv");
+	Node<Student>* pCur = nullptr;
+	string line;
+	if (fin.is_open()) {
+		getline(fin, line);
+		while (getline(fin, line)) {
+			if (pCur == nullptr) {
+				pCur = new Node<Student>;
+				pHead = pCur;
+			}
+			else {
+				pCur->next = new Node<Student>;
+				pCur = pCur->next;
+			}
+			stringstream inputString(line);
+			string no;
+			getline(inputString, no, ',');
+			getline(inputString, pCur->data.StID, ',');
+			getline(inputString, pCur->data.FirstName, ',');
+			getline(inputString, pCur->data.LastName, ',');
+			string genderFromFile;
+			getline(inputString, genderFromFile, ',');
+			pCur->data.Gender = (genderFromFile[0] == 'M'); 
+			string dob;
+			getline(inputString, dob, ',');
+			pCur->data.getDOB(dob);
+			getline(inputString, pCur->data.SocialID, ',');
+			getline(inputString, pCur->data.Password, '\n');
+		}
+	}
+	fin.close();
+}
+
+void loadStaffFromFile(Node<User>*& pHead) {
+	ifstream fin;
+	fin.open("../data/StaffList.csv");
+	Node<User>* pCur = nullptr;
+	string line;
+	if (fin.is_open()) {
+		getline(fin, line);
+		while (getline(fin, line)) {
+			if (pCur == nullptr) {
+				pCur = new Node<User>;
+				pHead = pCur;
+			}
+			else {
+				pCur->next = new Node<User>;
+				pCur = pCur->next;
+			}
+			stringstream inputString(line);
+			getline(inputString, pCur->data.Fullname, ',');
+			string dob;
+			getline(inputString, dob, ',');
+			pCur->data.getDOB(dob);
+			string genderFromFile;
+			getline(inputString, genderFromFile, ',');
+			pCur->data.Gender = (genderFromFile[0] == 'M');
+			getline(inputString, pCur->data.Username, ',');
+			getline(inputString, pCur->data.Password, ',');
+			getline(inputString, pCur->data.Email, '\n');
+		}
+	}
+	fin.close();
 }
 
