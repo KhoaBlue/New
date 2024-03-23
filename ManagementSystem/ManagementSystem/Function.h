@@ -56,8 +56,8 @@ struct Student : User
     string LastName;
     string Class;
     string SocialID;
-    string* courseID = new string[7];
-    Mark *Result = new Mark[7];
+    //string* courseID = new string[7];
+    //Mark *Result = new Mark[7];
 };
 
 struct Course {
@@ -81,15 +81,32 @@ struct Semester {
     string end_date;
     Course* CoursesList;
 };
+
 struct SchoolYear {
     string Name;
     string start_date;
     string end_date;
     Semester* SemestersList;
     int NumOfClasses = 50;
-    Class* ClassesList = new Class[NumOfClasses];
+    Class* ClassesList;
 };
 
+void LoadFileClass(Node <Class>*& pHead, string Name, int& n);
+void displayClassesList(Node <Class>*& pHead, string Name, int& n);
+void addNewClasses(Class *&NewClasses, int &numOfClass);
+void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
+void createSchoolYear(SchoolYear *&SyList, int &numSY);
+void deleteSchoolYear(SchoolYear &sy);
+void loadClassList(Class *&ClassList, int &numClass, string filename);
+void loadSchoolYear(SchoolYear &sy);
+void loadSchoolYearList(SchoolYear *&SyList, int &numSY);
+void updateClassList(Class *ClassList, int numClass, string filename);
+void updateSchoolYear(SchoolYear *SyList);
+void updateSchoolYearList(SchoolYear *SyList, int numSY);
+void initData(SchoolYear& currentSchoolYear);
 
-void createNewClasses(Class *&NewClasses, int &numOfClass);
-void createSchoolYear(SchoolYear &sy);
+void addCourse(SchoolYear& schoolYear);
+void addStudentToCourse(SchoolYear& schoolYear);
+//View a list of his/her courses. He/she will study these courses in this semester.
+void viewListCourse(const Student& st, SchoolYear schoolYear);
