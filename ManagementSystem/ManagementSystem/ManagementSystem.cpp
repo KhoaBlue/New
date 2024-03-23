@@ -10,7 +10,7 @@ int main() {
 		cout << SyList[i].Name << endl;
 	}
 	//delete[] StaffList;
-	SyList[0].ClassesList
+	
 	delete[] SyList;
 	return 0;
 }

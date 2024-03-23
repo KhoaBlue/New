@@ -47,7 +47,11 @@ struct User {
     bool Gender;
     Date DOB;
     string Email;
-    void getDOB() {};
+    void getDOB(string dob) {
+        DOB.Day = stoi(dob.substr(0, 2));
+        DOB.Month = stoi(dob.substr(3, 2));
+        DOB.Year = stoi(dob.substr(6, 4));
+    };
 };
 
 struct Student : User
@@ -78,6 +82,7 @@ struct Class {
 };
 
 struct Semester {
+    string name;
     string start_date;
     string end_date;
     Course* CoursesList;
@@ -110,8 +115,14 @@ void updateClassList(Class *ClassList, int numClass, string filename);
 void updateSchoolYear(SchoolYear *SyList);
 void updateSchoolYearList(SchoolYear *SyList, int numSY);
 void initData(SchoolYear& currentSchoolYear);
-
 void addCourse(SchoolYear& schoolYear);
 void addStudentToCourse(SchoolYear& schoolYear);
 //View a list of his/her courses. He/she will study these courses in this semester.
 void viewListCourse(const Student& st, SchoolYear schoolYear);
+void updateSchoolYearList(SchoolYear *SyList, int numSY);
+
+void createNewClasses(Class *&NewClasses, int &numOfClass);
+void createSchoolYear(SchoolYear &sy);
+void loadStudentFromFile(Node<Student>*& pHead, string filename);
+void loadStaffFromFile(Node<User>*& pHead);
+
