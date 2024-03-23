@@ -104,3 +104,9 @@ void loadSchoolYearList(SchoolYear *&SyList, int &numSY);
 void updateClassList(Class *ClassList, int numClass, string filename);
 void updateSchoolYear(SchoolYear *SyList);
 void updateSchoolYearList(SchoolYear *SyList, int numSY);
+void initData(SchoolYear& currentSchoolYear);
+
+void addCourse(SchoolYear& schoolYear);
+void addStudentToCourse(SchoolYear& schoolYear);
+//View a list of his/her courses. He/she will study these courses in this semester.
+void viewListCourse(const Student& st, SchoolYear schoolYear);
