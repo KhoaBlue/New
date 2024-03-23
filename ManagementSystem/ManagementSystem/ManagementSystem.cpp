@@ -9,7 +9,8 @@ int main() {
 	for (int i = 0; i < numSY; ++i) {
 		cout << SyList[i].Name << endl;
 	}
-	delete[] StaffList;
+	//delete[] StaffList;
+	SyList[0].ClassesList
 	delete[] SyList;
 	return 0;
 }

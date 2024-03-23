@@ -119,36 +119,13 @@ void updateSchoolYearList(SchoolYear *SyList, int numSY)
 	fout.close();
 }
 
-void LoadFileClass(Node <Class>*& pHead, string Name, int& n) {
-	ifstream fin;
-	fin.open("../data/ClassesList.txt");
-	if (fin.is_open()) {
-		fin >> n;
-		while (fin.get() != '\n');
-		Node <Class>* pCur = nullptr;
-		for (int i = 0; i < n; i++) {
-			if (pHead == nullptr) {
-				pHead = new Node <Class>;
-				pCur = pHead;
-			}
-			else {
-				pCur->next = new Node <Class>;
-				pCur = pCur->next;
-			}
-			getline(fin, pCur->data.Name);
-		}
-	}
-	fin.close();
-}
-
-void displayClassesList(Node <Class>*& pHead, string Name, int& n) {
-	LoadFileClass(pHead, Name, n);
-	Node <Class>* pTem = pHead;
-	for (int i = 0; i < n; i++) {
-		cout << pTem->data.Name << " ";
-		pTem = pTem->next;
-	}
-}
+//void displayClassesList(Node <Class>*& pHead, string Name, int& n) {
+//	Node <Class>* pTem = pHead;
+//	for (int i = 0; i < n; i++) {
+//		cout << pTem->data.Name << " ";
+//		pTem = pTem->next;
+//	}
+//}
 
 // Method view list course of student
 void viewListCourse(const Student& st, SchoolYear schoolYear) {
@@ -193,7 +170,7 @@ bool isValid(const SchoolYear& schoolYear, const Course& newCourse) {
         return false;
     }
 
-    for (int i = 0; i < schoolYear.numOfSemesters; ++i) {
+    for (int i = 0; i < 3; ++i) {
         const Semester& semester = schoolYear.SemestersList[i];
         for (int j = 0; j < semester.numOfCourses; ++j) {
             if (semester.CoursesList[j].ID == newCourse.ID) {
