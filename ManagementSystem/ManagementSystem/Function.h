@@ -91,7 +91,8 @@ struct SchoolYear {
     Class* ClassesList;
 };
 
-
+void LoadFileClass(Node <Class>*& pHead, string Name, int& n);
+void displayClassesList(Node <Class>*& pHead, string Name, int& n);
 void addNewClasses(Class *&NewClasses, int &numOfClass);
 void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
 void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
