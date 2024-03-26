@@ -257,142 +257,142 @@ void addCourse(SchoolYear& schoolYear) {
 
 
 // Method add student to course
-void addStudentToCourse(Course &co, Student st) {
-    // Input student ID
-    string studentID;
-    cout << "Enter student ID: ";
-    cin >> studentID;
-
-    // Input course ID
-    string courseID;
-    cout << "Enter course ID: ";
-    cin >> courseID;
-
-    // Find student with studentID : function 1
-    Student st;
-    cout << " currentSchoolYear.NumOfClasses: " << currentSchoolYear.NumOfClasses << "" << endl;
-
-    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
-        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
-        while (current != nullptr) {
-            if (current->data.StID == studentID) {
-                st = current->data;
-                break;
-            }
-            current = current->next;
-        }
-    }
-    if (st.StID == "") {
-        cout << "Error: Student ID not found" << endl;
-        return;
-    }
-
-    // Find course with courseID : function 2
-    Course co;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
-            cout << "Check courseId = " << currentSchoolYear.SemestersList[i].CoursesList[j].ID << endl;
-            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
-                co = currentSchoolYear.SemestersList[i].CoursesList[j];
-                break;
-            }
-        }
-    }
-    if (co.ID == "") {
-        cout << "Error: Course ID not found" << endl;
-        return;
-    }
-
-    // Check if course is full
-    if (co.numOfStudent >= co.maxStudent) {
-        cout << "Error: Course is full" << endl;
-        return;
-    }
-
-    string fileName = "../data/ClassesStudents/" + st.Class + "/CourseAttending/" + st.StID + ".txt";
-    ifstream file(fileName);
-    if (!file.is_open()) {
-        ofstream fileOut(fileName);
-    }
-    else {
-        string currentCourseID = "";
-        while (getline(file, currentCourseID)) {
-            if (currentCourseID == "") {
-                break;
-            }
-            if (currentCourseID == courseID) {
-                cout << "Error: Student is already in course" << endl;
-                return;
-            }
-        }
-        file.close();
-    }
-
-
-    // Add student to course
-    for (int i = 0; i < 7; i++) {
-        if (st.courseID[i] == "") {
-            st.courseID[i] = courseID;
-            break;
-        }
-    }
-
-    // Add course to student
-    for (int i = 0; i < 7; i++) {
-        if (co.stHead == nullptr) {
-            co.stHead = new Node<Student>;
-            co.stHead->data = st;
-            co.stHead->next = nullptr;
-            co.numOfStudent++;
-            break;
-        }
-        else {
-            Node<Student>* current = co.stHead;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            Node<Student>* newStudentNode = new Node<Student>;
-            newStudentNode->data = st;
-            newStudentNode->next = nullptr;
-            current->next = newStudentNode;
-            co.numOfStudent++;
-            break;
-        }
-    }
-
-    // Update student in class
-    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
-        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
-        while (current != nullptr) {
-            if (current->data.StID == studentID) {
-                current->data = st;
-                break;
-            }
-            current = current->next;
-        }
-    }
-
-    // Update course in semester
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
-            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
-                currentSchoolYear.SemestersList[i].CoursesList[j] = co;
-                break;
-            }
-        }
-    }
-
-    // Add courseId to file
-    ofstream fileOut(fileName, ios::app);
-    if (!fileOut.is_open()) {
-        cout << "Error: Cannot open file " << fileName << endl;
-        return;
-    }
-    fileOut << courseID << endl;
-    fileOut.close();
-
-    cout << "Add student to course successfully" << endl;
-}
+//void addStudentToCourse(Course &co, Student st) {
+//    // Input student ID
+//    string studentID;
+//    cout << "Enter student ID: ";
+//    cin >> studentID;
+//
+//    // Input course ID
+//    string courseID;
+//    cout << "Enter course ID: ";
+//    cin >> courseID;
+//
+//    // Find student with studentID : function 1
+//    Student st;
+//    cout << " currentSchoolYear.NumOfClasses: " << currentSchoolYear.NumOfClasses << "" << endl;
+//
+//    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+//        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
+//        while (current != nullptr) {
+//            if (current->data.StID == studentID) {
+//                st = current->data;
+//                break;
+//            }
+//            current = current->next;
+//        }
+//    }
+//    if (st.StID == "") {
+//        cout << "Error: Student ID not found" << endl;
+//        return;
+//    }
+//
+//    // Find course with courseID : function 2
+//    Course co;
+//    for (int i = 0; i < 3; i++) {
+//        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+//            cout << "Check courseId = " << currentSchoolYear.SemestersList[i].CoursesList[j].ID << endl;
+//            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
+//                co = currentSchoolYear.SemestersList[i].CoursesList[j];
+//                break;
+//            }
+//        }
+//    }
+//    if (co.ID == "") {
+//        cout << "Error: Course ID not found" << endl;
+//        return;
+//    }
+//
+//    // Check if course is full
+//    if (co.numOfStudent >= co.maxStudent) {
+//        cout << "Error: Course is full" << endl;
+//        return;
+//    }
+//
+//    string fileName = "../data/ClassesStudents/" + st.Class + "/CourseAttending/" + st.StID + ".txt";
+//    ifstream file(fileName);
+//    if (!file.is_open()) {
+//        ofstream fileOut(fileName);
+//    }
+//    else {
+//        string currentCourseID = "";
+//        while (getline(file, currentCourseID)) {
+//            if (currentCourseID == "") {
+//                break;
+//            }
+//            if (currentCourseID == courseID) {
+//                cout << "Error: Student is already in course" << endl;
+//                return;
+//            }
+//        }
+//        file.close();
+//    }
+//
+//
+//    // Add student to course
+//    for (int i = 0; i < 7; i++) {
+//        if (st.courseID[i] == "") {
+//            st.courseID[i] = courseID;
+//            break;
+//        }
+//    }
+//
+//    // Add course to student
+//    for (int i = 0; i < 7; i++) {
+//        if (co.stHead == nullptr) {
+//            co.stHead = new Node<Student>;
+//            co.stHead->data = st;
+//            co.stHead->next = nullptr;
+//            co.numOfStudent++;
+//            break;
+//        }
+//        else {
+//            Node<Student>* current = co.stHead;
+//            while (current->next != nullptr) {
+//                current = current->next;
+//            }
+//            Node<Student>* newStudentNode = new Node<Student>;
+//            newStudentNode->data = st;
+//            newStudentNode->next = nullptr;
+//            current->next = newStudentNode;
+//            co.numOfStudent++;
+//            break;
+//        }
+//    }
+//
+//    // Update student in class
+//    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+//        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
+//        while (current != nullptr) {
+//            if (current->data.StID == studentID) {
+//                current->data = st;
+//                break;
+//            }
+//            current = current->next;
+//        }
+//    }
+//
+//    // Update course in semester
+//    for (int i = 0; i < 3; i++) {
+//        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+//            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
+//                currentSchoolYear.SemestersList[i].CoursesList[j] = co;
+//                break;
+//            }
+//        }
+//    }
+//
+//    // Add courseId to file
+//    ofstream fileOut(fileName, ios::app);
+//    if (!fileOut.is_open()) {
+//        cout << "Error: Cannot open file " << fileName << endl;
+//        return;
+//    }
+//    fileOut << courseID << endl;
+//    fileOut.close();
+//
+//    cout << "Add student to course successfully" << endl;
+//}
 
 // Đọc thông tin của một học kỳ từ các tệp tin
 void initData(SchoolYear& currentSchoolYear) {
@@ -400,7 +400,7 @@ void initData(SchoolYear& currentSchoolYear) {
 }
 void loadStudentFromFile(Node<Student> *&pHead, string filename) {
 	ifstream fin;
-	fin.open("../data/ClassesStudents/" + filename + "/" + filename + ".csv");
+	fin.open(filename);
 	Node<Student>* pCur = nullptr;
 	string line;
 	if (fin.is_open()) {
