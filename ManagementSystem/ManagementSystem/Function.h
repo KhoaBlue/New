@@ -161,3 +161,11 @@ void viewListCourse(const Student& st, SchoolYear schoolYear);
 
 void createNewClasses(Class *&NewClasses, int &numOfClass);
 void createSchoolYear(SchoolYear &sy);
+void loadStudentFromFile(Node<Student>*& pHead, string filename);
+void loadStaffFromFile(Node<User>*& pHead);
+
+void displayClassesList(SchoolYear SyList, Class* CLassList);
+void viewStudentsInClass(SchoolYear Sy, Class* ClassList);
+void viewListOfCourse(int Option, SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
+void viewStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
+void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
