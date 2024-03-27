@@ -19,18 +19,6 @@ struct Time
     short Minute;
 };
 
-struct Date {
-    short Day;
-    short Month;
-    short Year;
-};
-
-struct Session
-{
-    string Day;
-    short time; //1: 7:30; 2: 9:30; 3: 13:30; 4: 15:30.
-};
-
 struct Mark {
     string CourseID;
     string Type;
@@ -44,14 +32,9 @@ struct User {
     string Username;
     string Password;
     string Fullname;
-    bool Gender;
-    Date DOB;
+    bool Gender; //true: male, false: female
+    string DOB;
     string Email;
-    void getDOB(string dob) {
-        DOB.Day = stoi(dob.substr(0, 2));
-        DOB.Month = stoi(dob.substr(3, 2));
-        DOB.Year = stoi(dob.substr(6, 4));
-    };
 };
 
 struct Student : User
@@ -61,8 +44,18 @@ struct Student : User
     string LastName;
     string Class;
     string SocialID;
-    string* courseID = new string[7];
-    //Mark *Result = new Mark[7];
+    string *courseID = new string[7];
+    string *courseName = new string[7];
+    int numOfCoursesAttending;
+    Mark *Result = new Mark[7];
+    void setResult(string CourseID, Mark res) {
+        for (int i = 0; i < numOfCoursesAttending; ++i) {
+            if (courseID[i] == CourseID) {
+                Result[i] = res;
+                break;
+            }
+        }
+    }
 };
 
 struct Course {
@@ -71,9 +64,24 @@ struct Course {
     short NumOfCredits;
     string ClassName;
     string Lecturer;
+    string DayOfWeek;
+    int session; ////1: 7:30; 2: 9:30; 3: 13:30; 4: 15:30.
     int maxStudent = 50;
     int numOfStudent = 0;
     Node<Student>* stHead = nullptr;
+    string start_date;
+    string end_date;
+    //void setStartDay(string date) {
+    //    start_date.Day = stoi(date.substr(0, 2));
+    //    start_date.Month = stoi(date.substr(2, 2));
+    //    start_date.Year = stoi(date.substr(5, 2));
+    //}
+
+    //void setEndDay(string date) {
+    //    end_date.Day = stoi(date.substr(0, 2));
+    //    end_date.Month = stoi(date.substr(2, 2));
+    //    end_date.Year = stoi(date.substr(5, 2));
+    //}
 };
 
 struct Class {
@@ -86,7 +94,7 @@ struct Semester {
     string start_date;
     string end_date;
     Course* CoursesList;
-    int numOfCourses;
+    int numOfCourses;   
     Semester() : start_date(""), end_date(""), numOfCourses(0), CoursesList(nullptr), name("") {}
     Semester(const string &start, const string &end)
         : start_date(start), end_date(end), numOfCourses(0), CoursesList(nullptr), name("") {}
@@ -102,27 +110,54 @@ struct SchoolYear {
     Class* ClassesList;
 };
 
+//functions for loading data from file
+SchoolYear *loadSchoolYearList(SchoolYear *&SyList, int &numSY);
+bool loadSemesterFromFile(Semester &se, string filename);
+void loadCourseList(Course *&CourseList, int &numOfCourse, string filename);
+void loadCourseInfoFromFile(Course &co, string filename);
+void loadClassList(Class *&ClassList, int &numClass, string filename);
+void loadCourseStudents(Course &co, string filename);
+void loadStudentFromFile(Node<Student>*& pHead, string filename);
+void loadStaffFromFile(Node<User>*& pHead);
+
+//functions for updating data to file
+void updateSchoolYearList(SchoolYear *SyList, int numSY);
+void updateSemesterToFile(Semester se, string filename);
+void updateCourseList(Course *CourseList, int numOfCourse, string filename);
+void updateCourseToFile(Course co, string filename);
+void updateClassList(Class *ClassList, int numClass, string filename);
+void updateStudentToFile(Node<Student> *pHead, string filename);
+void updateStaffToFile(Node<User> *pHead);
+
+//functions for deleting data:
+void deleteStaffList(Node<User> *StaffHead);
+void deleteStudentList(Node<Student> *pHead);
+void deleteClassList(Class *ClassList, int numOfClasses);
+void deleteSemesterList(Semester *SemesterList, int numOfSemesters);
+void deleteCourseList(Course *CourseList, int numOfCourses);
+void deleteSchoolYearList(SchoolYear *SyList, int numOfSchoolYears);
+
+//functions for ouputting
+void outputStaffList(Node<User> *StaffHead);
+void outputStudent(Student x);
+void outputStudentList(Node<Student> *StudentHead);
+
 void displayClassesList(Node <Class>*& pHead, string Name, int& n);
 void addNewClasses(Class *&NewClasses, int &numOfClass);
 void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
 void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
 void createSchoolYear(SchoolYear *&SyList, int &numSY);
 void deleteSchoolYear(SchoolYear &sy);
-void loadClassList(Class *&ClassList, int &numClass, string filename);
-void loadSchoolYear(SchoolYear &sy);
-void loadSchoolYearList(SchoolYear *&SyList, int &numSY);
-void updateClassList(Class *ClassList, int numClass, string filename);
-void updateSchoolYear(SchoolYear *SyList);
-void updateSchoolYearList(SchoolYear *SyList, int numSY);
 void initData(SchoolYear& currentSchoolYear);
 void addCourse(SchoolYear& schoolYear);
-void addStudentToCourse(SchoolYear& schoolYear);
+void addStudentToCourse(SchoolYear &schoolYear); 
+
+
 //View a list of his/her courses. He/she will study these courses in this semester.
+
+
 void viewListCourse(const Student& st, SchoolYear schoolYear);
-void updateSchoolYearList(SchoolYear *SyList, int numSY);
+
 
 void createNewClasses(Class *&NewClasses, int &numOfClass);
 void createSchoolYear(SchoolYear &sy);
-void loadStudentFromFile(Node<Student>*& pHead, string filename);
-void loadStaffFromFile(Node<User>*& pHead);
-

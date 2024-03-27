@@ -2,15 +2,15 @@
 
 int main() {
 	SchoolYear *SyList;
-	User *StaffList;
-	Student *StudentList;
+	Node<User> *StaffHead = nullptr;
+	//Node<Student> *StudentHead = nullptr;
 	int numSY;
-	loadSchoolYearList(SyList, numSY);
-	for (int i = 0; i < numSY; ++i) {
-		cout << SyList[i].Name << endl;
-	}
-	//delete[] StaffList;
+	loadStaffFromFile(StaffHead);
+	SchoolYear *currentSchoolYear = loadSchoolYearList(SyList, numSY);
+	/*outputStaffList(StaffHead);*/
+	deleteStaffList(StaffHead);
+	deleteSchoolYearList(SyList, numSY);
+	//delete[] SyList;
 	
-	delete[] SyList;
 	return 0;
 }
