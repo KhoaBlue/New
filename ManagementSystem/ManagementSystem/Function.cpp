@@ -81,6 +81,7 @@ void loadClassList(Class *&ClassList, int &numClass, string filename)
 	fin.close();
 }
 
+
 void loadSchoolYearList(SchoolYear *&SyList, int &numSY)
 {
 	ifstream fin("../data/SchoolYears.txt");
@@ -120,13 +121,6 @@ void updateSchoolYearList(SchoolYear *SyList, int numSY)
 	fout.close();
 }
 
-//void displayClassesList(Node <Class>*& pHead, string Name, int& n) {
-//	Node <Class>* pTem = pHead;
-//	for (int i = 0; i < n; i++) {
-//		cout << pTem->data.Name << " ";
-//		pTem = pTem->next;
-//	}
-//}
 
 // Method view list course of student
 void viewListCourse(const Student& st, SchoolYear schoolYear) {
@@ -465,3 +459,97 @@ void loadStaffFromFile(Node<User>*& pHead) {
 	fin.close();
 }
 
+void displayClassesList(SchoolYear SyList, Class* CLassList){
+    cout << "List of Class in School Year " << SyList.Name << ":" << endl;
+    for (int i = 0; i < SyList.NumOfClasses; ++i) {
+        cout << SyList.ClassesList[i].Name << endl;
+    }
+}
+
+void viewStudentsInClass(SchoolYear Sy, Class* ClassList) {
+    cout << "List of CLass In School Year " << Sy.Name << ":" << Sy.NumOfClasses << endl;
+    for (int i = 0; i < Sy.NumOfClasses; ++i) {
+        cout << i + 1 << ": " << ClassList[i].Name << endl;
+    }
+    cout << "Enter the number to view the students in the class:";
+    int n; cin >> n;
+    cout << "The Student in the class " << ClassList[n - 1].Name << ":" << endl;
+    Node<Student>* current = ClassList[n - 1].stHead;
+    while (current) {
+        cout << current->data.Fullname << endl;
+        current = current->next;
+    }
+}
+
+void viewListOfCourse(int Option, SchoolYear* SyList,Semester* SemesterList,Course* CourseList, int numSY){
+    if (Option == 1) { //View All of Courses
+        cout << "List Of All Courses:" << endl;
+        for (int i = 0; i < numSY; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                for (int k = 0; k < SyList[i].SemestersList[j].numOfCourses; ++k) {
+                    cout << SyList[i].SemestersList[j].CoursesList[k].ClassName << ": " << SyList[i].SemestersList[j].CoursesList[k].ID << endl;
+                }
+               }
+        }
+    }
+    else // Option = 0
+    {
+        cout << "List Of All Courses in School Year " << SyList[0].Name << ":" << endl;
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < SyList[0].SemestersList[i].numOfCourses; ++j) {
+                cout << SyList[0].SemestersList[i].CoursesList[j].ClassName << ": " << SyList[0].SemestersList[i].CoursesList[j].ID << endl;
+            }
+        }
+    }
+} 
+
+void viewStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY) {
+    viewListOfCourse(0, SyList, SemesterList, CourseList, numSY); // 0 - School year nearly
+    cout << "Enter the course's ID to view list of students:";
+    string tem; cin >> tem;
+    bool find = false;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < SyList[0].SemestersList[i].numOfCourses;++j) {
+            if (SyList[0].SemestersList[i].CoursesList[j].ID == tem) {
+                find = true;
+                cout << "List of Student:" << endl;
+                Node <Student>* current = SyList[0].SemestersList[i].CoursesList[j].stHead;
+                while (current) {
+                    cout << current->data.Fullname << endl;
+                }
+                break;
+               }
+        }
+    }
+    if (!find) cout << "Course's ID doesn't exist" << endl;
+}
+
+void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY) { // At the end of semester
+    viewListOfCourse(0, SyList, SemesterList, CourseList, numSY); 
+    cout << "Enter the course's ID to export list of students:";
+    string tem; cin >> tem;
+    ofstream fout;
+    string filename = "../data/Export/" + SyList[0].Name + "/Semester2/" + tem + ".csv";
+    fout.open(filename);
+    bool find = false;
+    if (!fout.is_open()) cout << "Can't export the list";
+    else {
+        for (int i = 0; i < SyList[0].SemestersList[1].numOfCourses; ++i) {
+            if (tem == SyList[0].SemestersList[1].CoursesList[i].ID) {
+                find = true;
+                Node <Student>* current = SyList[0].SemestersList[1].CoursesList[i].stHead;
+                fout << SyList[0].SemestersList[1].CoursesList[i].numOfStudent << endl;
+                fout << "ID,Fullname,StudentID" << endl;
+                int cnt = 1;
+                while (current) {
+                    fout << cnt++ << ",";
+                    fout << current->data.Fullname << ",";
+                    fout << current->data.StID;
+                    fout << endl;
+                }
+                break;
+            }
+        }
+        if (!find) cout << "Course's ID doesn't exist" << endl;
+    }
+}

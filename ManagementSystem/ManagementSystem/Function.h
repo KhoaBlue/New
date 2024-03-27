@@ -102,7 +102,7 @@ struct SchoolYear {
     Class* ClassesList;
 };
 
-void displayClassesList(Node <Class>*& pHead, string Name, int& n);
+
 void addNewClasses(Class *&NewClasses, int &numOfClass);
 void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
 void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
@@ -120,9 +120,13 @@ void addStudentToCourse(SchoolYear& schoolYear);
 //View a list of his/her courses. He/she will study these courses in this semester.
 void viewListCourse(const Student& st, SchoolYear schoolYear);
 void updateSchoolYearList(SchoolYear *SyList, int numSY);
-
 void createNewClasses(Class *&NewClasses, int &numOfClass);
 void createSchoolYear(SchoolYear &sy);
 void loadStudentFromFile(Node<Student>*& pHead, string filename);
 void loadStaffFromFile(Node<User>*& pHead);
 
+void displayClassesList(SchoolYear SyList, Class* CLassList);
+void viewStudentsInClass(SchoolYear Sy, Class* ClassList);
+void viewListOfCourse(int Option, SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
+void viewStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
+void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
