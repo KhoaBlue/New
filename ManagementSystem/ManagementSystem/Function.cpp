@@ -17,7 +17,6 @@ SchoolYear *loadSchoolYearList(SchoolYear *&SyList, int &numSY)
 		SyList[i].SemestersList = new Semester[3];
 		for (int j = 0; j < 3; ++j) {
 			loadSemesterFromFile(SyList[i].SemestersList[j], "../data/SchoolYears/" + SyList[i].Name + "/Semester " + to_string(j + 1) + "/");
-			cout << "../data/SchoolYears/" + SyList[i].Name + "/Semester " + to_string(j + 1) + "/" << endl;
 		}
 	}
 	fin.close();
@@ -30,7 +29,6 @@ bool loadSemesterFromFile(Semester &se, string filename) {
 		cout << "Cannot loadSemesterFromFile - Info" << endl;
 		return false;
 	}
-	fin.ignore();
 	getline(fin, se.name);
 	if (fin.eof()) {
 		cout << "No data";
@@ -57,9 +55,7 @@ void loadCourseList(Course *&CourseList, int &numOfCourse, string filename)
 		fin >> CourseList[i].ID;
 		fin >> CourseList[i].ClassName;
 		loadCourseInfoFromFile(CourseList[i], filename + "CoursesInfo/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".txt");
-		cout << filename + "CoursesInfo/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".txt" << endl;
 		loadCourseStudents(CourseList[i], filename + "CoursesStudents/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".csv");
-		cout << filename + "CoursesStudents/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".csv" << endl;
 	}
 	fin.close();
 }
@@ -72,6 +68,10 @@ void loadCourseInfoFromFile(Course &co, string filename)
 		cout << "Cannot loadCourseInfoFromFile" << endl;
 		return;
 	}
+
+	getline(fin, co.Name);
+	getline(fin, co.Lecturer);
+	fin >> co.NumOfCredits;
 	getline(fin, co.Name);
 	getline(fin, co.Lecturer);
 	fin >> co.NumOfCredits;
@@ -314,7 +314,6 @@ void deleteStaffList(Node<User> *StaffHead)
 		cur = cur->next;
 		delete tmp;
 	}
-	cout << "deleteStaffList" << endl;
 }
 
 void deleteStudentList(Node<Student> *pHead)
@@ -328,7 +327,6 @@ void deleteStudentList(Node<Student> *pHead)
 		delete[] tmp->data.Result;
 		delete tmp;
 	}
-	cout << "deleteStudentList" << endl;
 }
 
 void outputStaffList(Node<User> *StaffHead)
@@ -347,7 +345,6 @@ void deleteClassList(Class *ClassList, int numOfClasses)
 		deleteStudentList(ClassList[i].stHead);
 	}
 	delete[] ClassList;
-	cout << "deleteClassList" << endl;
 }	
 
 void deleteSemesterList(Semester *SemesterList, int numOfSemester)
@@ -356,7 +353,6 @@ void deleteSemesterList(Semester *SemesterList, int numOfSemester)
 		deleteCourseList(SemesterList[i].CoursesList, SemesterList[i].numOfCourses);
 	}
 	delete[] SemesterList;
-	cout << "deleteSemesterList" << endl;
 }
 
 void deleteSchoolYearList(SchoolYear *SyList, int numOfSchoolYears) {
@@ -366,7 +362,6 @@ void deleteSchoolYearList(SchoolYear *SyList, int numOfSchoolYears) {
 		deleteSemesterList(SyList[i].SemestersList, SyList[i].numOfSemesters);
 	}
 	delete[] SyList;
-	cout << "deleteSchoolYearList" << endl;
 }
 
 
@@ -522,6 +517,145 @@ void addCourse(SchoolYear& schoolYear) {
 
 
 // Method add student to course
+void addStudentToCourse(SchoolYear& currentSchoolYear) 
+{
+
+    // Input student ID
+    string studentID;
+    cout << "Enter student ID: ";
+    cin >> studentID;
+
+    // Input course ID
+    string courseID;
+    cout << "Enter course ID: ";
+    cin >> courseID;
+
+    // Find student with studentID
+    Student st;
+    cout << " currentSchoolYear.NumOfClasses: " << currentSchoolYear.NumOfClasses << "" << endl;
+
+    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
+        while (current != nullptr) {
+            if (current->data.StID == studentID) {
+                st = current->data;
+                break;
+            }
+            current = current->next;
+        }
+    }
+    if (st.StID == "") {
+        cout << "Error: Student ID not found" << endl;
+        return;
+    }
+
+    // Find course with courseID
+    Course co;
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+            cout << "Check courseId = " << currentSchoolYear.SemestersList[i].CoursesList[j].ID << endl;
+            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
+                co = currentSchoolYear.SemestersList[i].CoursesList[j];
+                break;
+            }
+        }
+    }
+    if (co.ID == "") {
+        cout << "Error: Course ID not found" << endl;
+        return;
+    }
+
+    // Check if course is full
+    if (co.numOfStudent >= co.maxStudent) {
+        cout << "Error: Course is full" << endl;
+        return;
+    }
+
+    string fileName = "../data/ClassesStudents/" + st.Class + "/CourseAttending/" + st.StID + ".txt";
+    ifstream file(fileName);
+    if (!file.is_open()) {
+        ofstream fileOut(fileName);
+    }
+    else {
+        string currentCourseID = "";
+        while (getline(file, currentCourseID)) {
+            if (currentCourseID == "") {
+                break;
+            }
+            if (currentCourseID == courseID) {
+                cout << "Error: Student is already in course" << endl;
+                return;
+            }
+        }
+        file.close();
+    }
+
+
+    // Add student to course
+    for (int i = 0; i < 7; i++) {
+        if (st.courseID[i] == "") {
+            st.courseID[i] = courseID;
+            break;
+        }
+    }
+
+    // Add course to student
+    for (int i = 0; i < 7; i++) {
+        if (co.stHead == nullptr) {
+            co.stHead = new Node<Student>;
+            co.stHead->data = st;
+            co.stHead->next = nullptr;
+            co.numOfStudent++;
+            break;
+        }
+        else {
+            Node<Student>* current = co.stHead;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            Node<Student>* newStudentNode = new Node<Student>;
+            newStudentNode->data = st;
+            newStudentNode->next = nullptr;
+            current->next = newStudentNode;
+            co.numOfStudent++;
+            break;
+        }
+    }
+
+    // Update student in class
+    for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+        Node<Student>* current = currentSchoolYear.ClassesList[i].stHead;
+        while (current != nullptr) {
+            if (current->data.StID == studentID) {
+                current->data = st;
+                break;
+            }
+            current = current->next;
+        }
+    }
+
+    // Update course in semester
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        for (int j = 0; j < currentSchoolYear.SemestersList[i].numOfCourses; j++) {
+            if (currentSchoolYear.SemestersList[i].CoursesList[j].ID == courseID) {
+                currentSchoolYear.SemestersList[i].CoursesList[j] = co;
+                break;
+            }
+        }
+    }
+
+    // Add courseId to file
+    ofstream fileOut(fileName, ios::app);
+    if (!fileOut.is_open()) {
+        cout << "Error: Cannot open file " << fileName << endl;
+        return;
+    }
+    fileOut << courseID << endl;
+    fileOut.close();
+
+    cout << "Add student to course successfully" << endl;
+}
+
 //void addStudentToCourse(Course &co, Student st) {
 //    // Input student ID
 //    string studentID;
@@ -663,6 +797,210 @@ void initData(SchoolYear& currentSchoolYear) {
     // Init data từ hệ thống file hiện tại 
 }
 
+void viewScoreboard(SchoolYear currentSchoolYear) {
+    string courseId;
+    cout << "Enter course ID: ";
+    cin >> courseId;
+    Semester* semestersList = currentSchoolYear.SemestersList;
+
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        Semester semester = semestersList[i];
+        if (semester.numOfCourses <= 0) {
+            continue;
+        }
+
+        Course* coursesList = semester.CoursesList;
+        for (int j = 0; j < semester.numOfCourses; j++) {
+            if (coursesList[j].ID == courseId) {
+                viewScoreboardInfo(semester, courseId, coursesList[j].ClassName);
+            }
+        }
+    }
+}
+
+void viewScoreboardInfo(Semester semester, string courseId, string className) {
+    // Read file in path
+    string path = "../data/SchoolYears/"
+        + semester.start_date
+        + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesStudents/"
+        + courseId + "_" + className + ".csv";
+
+    // Read file
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    cout << "With class " << className << " and course " << courseId << endl;
+    cout << "\t" << left << setw(10) << "No" << setw(20) << "Student ID" << setw(30) << "Student Full Name" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Other" << setw(10) << "Total" << setw(10) << "GPA" << endl;
+    // Read data
+    string line;
+    bool firstLine = true;
+    while (getline(file, line)) {
+        // Data of line: No,Student ID,Student Full Name,Midterm Mark,Final Mark,Other Mark,Total Mark,GPA
+        string token;
+        if (firstLine) {
+            firstLine = false;
+            continue;
+        }
+        istringstream iss(line);
+        getline(iss, token, ',');
+        cout << "\t" << left << setw(10) << token;
+        cout << setw(20);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(30);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token << endl;
+    }
+    file.close();
+}
+
+// Function 22: Update a student's result.
+void updateStudentResult(SchoolYear currentSchoolYear, Student student, Course course, int newPoint) {
+
+    Semester* semestersList = currentSchoolYear.SemestersList;
+
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        Semester semester = semestersList[i];
+        if (semester.numOfCourses <= 0) {
+            continue;
+        }
+
+        Course* coursesList = semester.CoursesList;
+        for (int j = 0; j < semester.numOfCourses; j++) {
+            if (coursesList[j].ID == course.ID) {
+                updateStudentResultInCourse(semester, student.StID, course.ID, coursesList[j].ClassName, newPoint);
+            }
+        }
+    }
+}
+
+void updateStudentResultInCourse(Semester semester, string studentId, string courseId, string className, int newPoint) {
+    string path = "../data/SchoolYears/"
+        + semester.start_date
+        + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesStudents/"
+        + courseId + "_" + className + ".csv";
+
+    // Read file
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    // Read data
+    string line;
+    Node<string>* lines = nullptr;
+    while (getline(file, line)) {
+        Node<string>* newNode = new Node<string>;
+        newNode->data = line;
+        newNode->next = nullptr;
+        if (lines == nullptr) {
+            lines = newNode;
+        }
+        else {
+            Node<string>* current = lines;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+    }
+
+    // Update new point
+    //No,Student ID,Student Full Name,Midterm Mark,Final Mark,Other Mark,Total Mark,GPA
+    Node<string>* currentLine = lines;
+    while (currentLine != nullptr) {
+        string line = currentLine->data;
+        istringstream iss(line);
+        string no;
+        getline(iss, no, ',');
+        string studentIDFile;
+        getline(iss, studentIDFile, ','); // Student Id
+        string fullname;
+        getline(iss, fullname, ','); // Student Full Name
+        string midtermMark;
+        getline(iss, midtermMark, ','); // Midterm Mark
+        string finalMark;
+        getline(iss, finalMark, ','); // Final Mark
+        string otherMark;
+        getline(iss, otherMark, ','); // Other Mark
+        string totalMark;
+        getline(iss, totalMark, ','); // Total Mark
+        string gpa;
+        getline(iss, gpa, ','); // GPA
+
+        if (studentIDFile == studentId) {
+            // Update new point
+            int yourChoose = 0;
+            cout << "Choose the point you want to update: " << endl;
+            cout << "1. Midterm Mark" << endl;
+            cout << "2. Final Mark" << endl;
+            cout << "3. Other Mark" << endl;
+            cout << "4. Total Mark" << endl;
+
+            while (yourChoose <= 0 || yourChoose > 4)
+            {
+                cout << "Enter your choose: ";
+                cin >> yourChoose;
+                if (yourChoose == 1) {
+                    midtermMark = to_string(newPoint);
+                }
+                else if (yourChoose == 2) {
+                    finalMark = to_string(newPoint);
+                }
+                else if (yourChoose == 3) {
+                    otherMark = to_string(newPoint);
+                }
+                else if (yourChoose == 4) {
+                    totalMark = to_string(newPoint);
+                }
+                else {
+                    cout << "Invalid choose. Please choose again!" << endl;
+                }
+            }
+
+        }
+
+        currentLine->data = no + "," + studentIDFile + "," + fullname + "," + midtermMark + "," + finalMark + "," + otherMark + "," + totalMark + "," + gpa;
+        currentLine = currentLine->next;
+    }
+
+    // Write to file
+    ofstream fileOut(path);
+    if (!fileOut.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    Node<string>* current = lines;
+    while (current != nullptr) {
+        fileOut << current->data << endl;
+        current = current->next;
+    }
+    fileOut.close();
+}
 
 void addNewClasses(Class *&NewClasses, int &numOfClass)
 {
@@ -812,3 +1150,45 @@ void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Co
         if (!find) cout << "Course's ID doesn't exist" << endl;
     }
 }
+
+bool isStaff(string username) {
+	return (!isdigit(username[0]));
+}
+
+Node<Student>* findUserStudent(string username, string password, Class* classList, int numOfClasses) {
+	Node<Student>* pCur = nullptr;
+	for (int i = 0; i < numOfClasses; i++) {
+		pCur = classList[i].stHead;
+		while (pCur) {
+			if (username == pCur->data.StID && password == pCur->data.Password) {
+				return pCur;
+			}
+			pCur = pCur->next;
+		}
+	}
+	return nullptr;
+}
+Node<User>* findUserStaff(string username, string password, Node<User>* pStaffList) {
+	Node<User>* pCur = pStaffList;
+	while (pCur) {
+		if (username == pCur->data.Username && password == pCur->data.Password) {
+			return pCur;
+		}
+		pCur = pCur->next;
+	}
+	return nullptr;
+}
+
+// return true if user is in data, return false otherwise
+bool checkLogin(bool &role, Node<User> *&pUser, Node<Student> *&pStudent, string username, string password, SchoolYear *&currentSchoolYear, Node<User> *StaffHead) {
+	if (isStaff(username)) {
+		role = true;
+		pUser = findUserStaff(username, password, StaffHead);
+	}
+	else {
+		role = false;
+		pStudent = findUserStudent(username, password, currentSchoolYear->ClassesList, currentSchoolYear->NumOfClasses);
+	}
+	return (pStudent != nullptr || pUser != nullptr);
+}
+

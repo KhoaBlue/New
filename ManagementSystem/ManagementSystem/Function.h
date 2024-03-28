@@ -1,9 +1,10 @@
 #pragma once
-
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
+#include <iomanip>
+
 
 using namespace std;
 
@@ -144,26 +145,34 @@ void outputStudent(Student x);
 void outputStudentList(Node<Student> *StudentHead);
 
 void displayClassesList(Node <Class>*& pHead, string Name, int& n);
-void addNewClasses(Class *&NewClasses, int &numOfClass);
-void addClasses(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
-void initSchoolYear(SchoolYear &sy, Class *OldClasses, int NumOldClasses);
-void createSchoolYear(SchoolYear *&SyList, int &numSY);
-void deleteSchoolYear(SchoolYear &sy);
+void addNewClasses(Class*& NewClasses, int& numOfClass);
+void addClasses(SchoolYear& sy, Class* OldClasses, int NumOldClasses);
+void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses);
+void createSchoolYear(SchoolYear*& SyList, int& numSY);
+
 void initData(SchoolYear& currentSchoolYear);
 void addCourse(SchoolYear& schoolYear);
 void addStudentToCourse(SchoolYear &schoolYear); 
 
 
 //View a list of his/her courses. He/she will study these courses in this semester.
+void viewListCourse(const Student& student, Semester& semester);
+
+void viewScoreboard(SchoolYear currentSchoolYear);
+void updateStudentResult(SchoolYear currentSchoolYear, Student student, Course course, int newPoint);
+void viewScoreboardInfo(Semester semester, string courseID, string className);
+void updateStudentResultInCourse(Semester semester, string studentId, string courseId, string className, int newPoint);
+
+
 void viewListCourse(const Student& st, SchoolYear schoolYear);
 
-void createNewClasses(Class *&NewClasses, int &numOfClass);
-void createSchoolYear(SchoolYear &sy);
-void loadStudentFromFile(Node<Student>*& pHead, string filename);
-void loadStaffFromFile(Node<User>*& pHead);
 
 void displayClassesList(SchoolYear SyList, Class* CLassList);
 void viewStudentsInClass(SchoolYear Sy, Class* ClassList);
 void viewListOfCourse(int Option, SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
 void viewStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
 void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Course* CourseList, int numSY);
+
+
+// 
+bool checkLogin(bool&, Node<User>*&, Node<Student>*&, string, string, SchoolYear *&, Node<User>*);
