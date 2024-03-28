@@ -1,0 +1,17 @@
+[33mcommit 1ae97037ba4425a606a43a12189c021e9bcb2f55[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Noridom1 <thinhphuc2005@gmail.com>
+Date:   Fri Mar 15 21:58:50 2024 +0700
+
+    Adding data file
+
+[33mcommit f5db12da738763fb19083accb39bb77f5f378e02[m
+Author: endy1002 <nguyendat100205@gmail.com>
+Date:   Thu Mar 14 17:31:09 2024 +0700
+
+    Add project
+
+[33mcommit 3d84036147e8517543342510c11b507dcdcf9490[m
+Author: Nguyên Đạt <116150298+endy1002@users.noreply.github.com>
+Date:   Thu Mar 14 17:28:06 2024 +0700
+
+    Create .gitignore

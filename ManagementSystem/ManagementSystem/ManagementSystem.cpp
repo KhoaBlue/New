@@ -2,15 +2,31 @@
 
 int main() {
 	SchoolYear *SyList;
-	User *StaffList;
-	Student *StudentList;
+	Node<User> *StaffHead = nullptr;
+	//Node<Student> *StudentHead = nullptr;
+	bool isStaff; //tru
 	int numSY;
-	loadSchoolYearList(SyList, numSY);
-	for (int i = 0; i < numSY; ++i) {
-		cout << SyList[i].Name << endl;
+	Node<Student> *pStudent = nullptr;
+	Node<User> *pUser = nullptr;
+	loadStaffFromFile(StaffHead);
+	SchoolYear *currentSchoolYear = loadSchoolYearList(SyList, numSY);
+	string username, password;
+	getline(cin, username);
+	getline(cin, password);
+	if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
+		cout << "SUCCESS" << endl;
 	}
-	//delete[] StaffList;
+	else cout << "FAIl" << endl;
+	if (isStaff) {
+		cout << pUser->data.Fullname;
+	}
+	else {
+		cout << pStudent->data.Fullname;
+	}
+	/*outputStaffList(StaffHead);*/
+	deleteStaffList(StaffHead);
+	deleteSchoolYearList(SyList, numSY);
+	//delete[] SyList;
 	
-	delete[] SyList;
 	return 0;
 }
