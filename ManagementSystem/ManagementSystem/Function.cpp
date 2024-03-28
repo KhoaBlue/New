@@ -72,8 +72,6 @@ void loadCourseInfoFromFile(Course &co, string filename)
 		cout << "Cannot loadCourseInfoFromFile" << endl;
 		return;
 	}
-
-	fin.ignore();
 	getline(fin, co.Name);
 	getline(fin, co.Lecturer);
 	fin >> co.NumOfCredits;
@@ -303,6 +301,11 @@ void updateStaffToFile(Node<User> *pHead, string filename) {
 //	}
 //}
 
+void loadStudentCoursesInfo(Student *st, string filename)
+{
+	ifstream fin(filename);
+}
+
 void deleteStaffList(Node<User> *StaffHead)
 {
 	Node<User> *cur = StaffHead;
@@ -372,13 +375,14 @@ void outputStudentList(Node<Student> *StudentHead)
 	Node<Student> *cur = StudentHead;
 	while (cur) {
 		outputStudent(cur->data);
+		cur = cur->next;
 	}
 }
 
 void outputStudent(Student x)
 {
 	cout << x.StID << " " << x.Fullname << " " << x.Gender << " " << x.Class << " ";
-	cout << x.DOB << " " << x.SocialID << " " << x.Password << " " << x.numOfCoursesAttending << endl;
+	cout << x.DOB << " " << x.SocialID << " " << x.Password << " " << endl;
 }
 
 void deleteCourseList(Course *CourseList, int numOfCourses)
@@ -712,38 +716,6 @@ void createSchoolYear(SchoolYear *&SyList, int &numSY) {
 	SyList = newSchoolYearList;
 	numSY++;
 	updateSchoolYearList(SyList, numSY);
-}
-
-void loadStaffFromFile(Node<User>*& pHead) {
-	ifstream fin;
-	fin.open("../data/StaffList.csv");
-	Node<User>* pCur = nullptr;
-	string line;
-	if (fin.is_open()) {
-		getline(fin, line);
-		while (getline(fin, line)) {
-			if (pCur == nullptr) {
-				pCur = new Node<User>;
-				pHead = pCur;
-			}
-			else {
-				pCur->next = new Node<User>;
-				pCur = pCur->next;
-			}
-			stringstream inputString(line);
-			getline(inputString, pCur->data.Fullname, ',');
-			string dob;
-			getline(inputString, dob, ',');
-			pCur->data.getDOB(dob);
-			string genderFromFile;
-			getline(inputString, genderFromFile, ',');
-			pCur->data.Gender = (genderFromFile[0] == 'M');
-			getline(inputString, pCur->data.Username, ',');
-			getline(inputString, pCur->data.Password, ',');
-			getline(inputString, pCur->data.Email, '\n');
-		}
-	}
-	fin.close();
 }
 
 void displayClassesList(SchoolYear SyList, Class* CLassList){

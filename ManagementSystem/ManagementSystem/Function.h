@@ -118,6 +118,7 @@ void loadCourseInfoFromFile(Course &co, string filename);
 void loadClassList(Class *&ClassList, int &numClass, string filename);
 void loadCourseStudents(Course &co, string filename);
 void loadStudentFromFile(Node<Student>*& pHead, string filename);
+void loadStudentCoursesInfo(Student *st, string filename);
 void loadStaffFromFile(Node<User>*& pHead);
 
 //functions for updating data to file
@@ -154,10 +155,7 @@ void addStudentToCourse(SchoolYear &schoolYear);
 
 
 //View a list of his/her courses. He/she will study these courses in this semester.
-
-
 void viewListCourse(const Student& st, SchoolYear schoolYear);
-
 
 void createNewClasses(Class *&NewClasses, int &numOfClass);
 void createSchoolYear(SchoolYear &sy);
