@@ -6,8 +6,6 @@ int main() {
 	//Node<Student> *StudentHead = nullptr;
 	bool isStaff; //tru
 	int numSY;
-	loadSchoolYearList(SyList, numSY);
-	delete[] SyList;
 	Node<Student> *pStudent = nullptr;
 	Node<User> *pUser = nullptr;
 	loadStaffFromFile(StaffHead);
