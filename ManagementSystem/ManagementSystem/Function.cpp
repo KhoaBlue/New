@@ -151,16 +151,14 @@ void displayClassesList(Node <Class>*& pHead, string Name, int& n) {
 }
 
 // Method view list course of student
-void viewListCourse(const Student& st, SchoolYear schoolYear) {
-    cout << "View list course of student: " << st.FirstName << " " << st.LastName << endl;
-    for (int i = 0; i < schoolYear.numOfSemesters; ++i) {
-        const Semester& semester = schoolYear.SemestersList[i];
-        for (int j = 0; j < semester.numOfCourses; ++j) {
-            const Course& course = semester.CoursesList[j];
-            for (int k = 0; k < 7; ++k) {
-                if (st.courseID[k] == course.ID) {
-                    cout << "Course " << k + 1 << ": " << course.Name << endl;
-                }
+void viewListCourse(const Student& student, Semester& semester) //tìm trong semester hiện tại
+{
+    cout << "View list course of student: " << student.FirstName << " " << student.LastName << endl;
+    for (int j = 0; j < semester.numOfCourses; ++j) {
+        const Course& course = semester.CoursesList[j];
+        for (int k = 0; k < 7; ++k) {
+            if (student.courseID[k] == course.ID) {
+                cout << "Course " << k + 1 << ": " << course.Name << endl;
             }
         }
     }
@@ -279,7 +277,9 @@ void addCourse(SchoolYear& schoolYear) {
 
 
 // Method add student to course
-void addStudentToCourse(SchoolYear& currentSchoolYear) {
+void addStudentToCourse(SchoolYear& currentSchoolYear) 
+{
+
     // Input student ID
     string studentID;
     cout << "Enter student ID: ";
@@ -421,3 +421,207 @@ void initData(SchoolYear& currentSchoolYear) {
     // Init data từ hệ thống file hiện tại 
 }
 
+void viewScoreboard(SchoolYear currentSchoolYear) {
+    string courseId;
+    cout << "Enter course ID: ";
+    cin >> courseId;
+    Semester* semestersList = currentSchoolYear.SemestersList;
+
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        Semester semester = semestersList[i];
+        if (semester.numOfCourses <= 0) {
+            continue;
+        }
+
+        Course* coursesList = semester.CoursesList;
+        for (int j = 0; j < semester.numOfCourses; j++) {
+            if (coursesList[j].ID == courseId) {
+                viewScoreboardInfo(semester, courseId, coursesList[j].ClassName);
+            }
+        }
+    }
+}
+
+void viewScoreboardInfo(Semester semester, string courseId, string className) {
+    // Read file in path
+    string path = "../data/SchoolYears/"
+        + semester.start_date
+        + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesStudents/"
+        + courseId + "_" + className + ".csv";
+
+    // Read file
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    cout << "With class " << className << " and course " << courseId << endl;
+    cout << "\t" << left << setw(10) << "No" << setw(20) << "Student ID" << setw(30) << "Student Full Name" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Other" << setw(10) << "Total" << setw(10) << "GPA" << endl;
+    // Read data
+    string line;
+    bool firstLine = true;
+    while (getline(file, line)) {
+        // Data of line: No,Student ID,Student Full Name,Midterm Mark,Final Mark,Other Mark,Total Mark,GPA
+        string token;
+        if (firstLine) {
+            firstLine = false;
+            continue;
+        }
+        istringstream iss(line);
+        getline(iss, token, ',');
+        cout << "\t" << left << setw(10) << token;
+        cout << setw(20);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(30);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token;
+        cout << setw(10);
+        getline(iss, token, ',');
+        cout << token << endl;
+    }
+    file.close();
+}
+
+// Function 22: Update a student's result.
+void updateStudentResult(SchoolYear currentSchoolYear, Student student, Course course, int newPoint) {
+
+    Semester* semestersList = currentSchoolYear.SemestersList;
+
+    for (int i = 0; i < currentSchoolYear.numOfSemesters; i++) {
+        Semester semester = semestersList[i];
+        if (semester.numOfCourses <= 0) {
+            continue;
+        }
+
+        Course* coursesList = semester.CoursesList;
+        for (int j = 0; j < semester.numOfCourses; j++) {
+            if (coursesList[j].ID == course.ID) {
+                updateStudentResultInCourse(semester, student.StID, course.ID, coursesList[j].ClassName, newPoint);
+            }
+        }
+    }
+}
+
+void updateStudentResultInCourse(Semester semester, string studentId, string courseId, string className, int newPoint) {
+    string path = "../data/SchoolYears/"
+        + semester.start_date
+        + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesStudents/"
+        + courseId + "_" + className + ".csv";
+
+    // Read file
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    // Read data
+    string line;
+    Node<string>* lines = nullptr;
+    while (getline(file, line)) {
+        Node<string>* newNode = new Node<string>;
+        newNode->data = line;
+        newNode->next = nullptr;
+        if (lines == nullptr) {
+            lines = newNode;
+        }
+        else {
+            Node<string>* current = lines;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+    }
+
+    // Update new point
+    //No,Student ID,Student Full Name,Midterm Mark,Final Mark,Other Mark,Total Mark,GPA
+    Node<string>* currentLine = lines;
+    while (currentLine != nullptr) {
+        string line = currentLine->data;
+        istringstream iss(line);
+        string no;
+        getline(iss, no, ',');
+        string studentIDFile;
+        getline(iss, studentIDFile, ','); // Student Id
+        string fullname;
+        getline(iss, fullname, ','); // Student Full Name
+        string midtermMark;
+        getline(iss, midtermMark, ','); // Midterm Mark
+        string finalMark;
+        getline(iss, finalMark, ','); // Final Mark
+        string otherMark;
+        getline(iss, otherMark, ','); // Other Mark
+        string totalMark;
+        getline(iss, totalMark, ','); // Total Mark
+        string gpa;
+        getline(iss, gpa, ','); // GPA
+
+        if (studentIDFile == studentId) {
+            // Update new point
+            int yourChoose = 0;
+            cout << "Choose the point you want to update: " << endl;
+            cout << "1. Midterm Mark" << endl;
+            cout << "2. Final Mark" << endl;
+            cout << "3. Other Mark" << endl;
+            cout << "4. Total Mark" << endl;
+
+            while (yourChoose <= 0 || yourChoose > 4)
+            {
+                cout << "Enter your choose: ";
+                cin >> yourChoose;
+                if (yourChoose == 1) {
+                    midtermMark = to_string(newPoint);
+                }
+                else if (yourChoose == 2) {
+                    finalMark = to_string(newPoint);
+                }
+                else if (yourChoose == 3) {
+                    otherMark = to_string(newPoint);
+                }
+                else if (yourChoose == 4) {
+                    totalMark = to_string(newPoint);
+                }
+                else {
+                    cout << "Invalid choose. Please choose again!" << endl;
+                }
+            }
+
+        }
+
+        currentLine->data = no + "," + studentIDFile + "," + fullname + "," + midtermMark + "," + finalMark + "," + otherMark + "," + totalMark + "," + gpa;
+        currentLine = currentLine->next;
+    }
+
+    // Write to file
+    ofstream fileOut(path);
+    if (!fileOut.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    Node<string>* current = lines;
+    while (current != nullptr) {
+        fileOut << current->data << endl;
+        current = current->next;
+    }
+    fileOut.close();
+}

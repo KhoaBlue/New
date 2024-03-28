@@ -5,5 +5,10 @@ int main() {
 	int numSY;
 	loadSchoolYearList(SyList, numSY);
 	delete[] SyList;
+	addCourse;
+	
+
+	
+
 	return 0;
 }
