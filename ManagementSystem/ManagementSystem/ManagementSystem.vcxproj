@@ -127,8 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="AddData.cpp" />
+    <ClCompile Include="Delete.cpp" />
+    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="LoadData.cpp" />
     <ClCompile Include="ManagementSystem.cpp" />
+    <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Function.h" />
