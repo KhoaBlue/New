@@ -40,7 +40,7 @@ void viewListCourse(const Student &st, SchoolYear schoolYear) {
             }
         }
     }
-}
+} // Method view list course of student
 
 void viewScoreboard(SchoolYear currentSchoolYear) {
     string courseId;
