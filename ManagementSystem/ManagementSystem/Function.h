@@ -72,17 +72,6 @@ struct Course {
     Node<Student>* stHead = nullptr;
     string start_date;
     string end_date;
-    //void setStartDay(string date) {
-    //    start_date.Day = stoi(date.substr(0, 2));
-    //    start_date.Month = stoi(date.substr(2, 2));
-    //    start_date.Year = stoi(date.substr(5, 2));
-    //}
-
-    //void setEndDay(string date) {
-    //    end_date.Day = stoi(date.substr(0, 2));
-    //    end_date.Month = stoi(date.substr(2, 2));
-    //    end_date.Year = stoi(date.substr(5, 2));
-    //}
 };
 
 struct Class {
@@ -175,4 +164,4 @@ void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Co
 
 
 // 
-bool checkLogin(bool&, Node<User>*&, Node<Student>*&, string, string, SchoolYear *&, Node<User>*);
+bool checkLogin(bool& role, Node<User>*& pUser, Node<Student>*& pStudent, string username, string password, SchoolYear*& currentSchoolYear, Node<User>* StaffHead);
