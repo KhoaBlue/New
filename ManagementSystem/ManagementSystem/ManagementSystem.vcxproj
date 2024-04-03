@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="Objects.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="TextBox.h" />
   </ItemGroup>

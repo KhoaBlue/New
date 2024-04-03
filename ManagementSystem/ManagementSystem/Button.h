@@ -3,16 +3,14 @@
 
 struct Button {
 	//Attributes
-	sf::RectangleShape button;
 	sf::Text text;
-
+	sf::Sprite sprite;
+	sf::Texture texture;
 	//Constructor
-	Button(std::string txt, sf::Vector2f size, int charSize, sf::Color bgColor, sf::Color txtColor) {
-		text.setString(txt);
-		button.setFillColor(bgColor);
-		text.setFillColor(txtColor);
-		text.setCharacterSize(charSize);
-		button.setSize(size);
+	Button(std::string filename, float x, float y) {
+		texture.loadFromFile(filename);
+		sprite.setTexture(texture);
+		sprite.setPosition(x, y);
 	}
 	
 
@@ -22,32 +20,28 @@ struct Button {
 	}
 
 	void setPos(sf::Vector2f pos) {
-		button.setPosition(pos);
-		float txtPosX = (pos.x + button.getGlobalBounds().width / 4) - (text.getGlobalBounds().width / 2);
-		float txtPosY = (pos.y + button.getGlobalBounds().height / 4) - (text.getGlobalBounds().height / 2);
+		sprite.setPosition(pos);
+		float txtPosX = 1.0 * (pos.x + sprite.getGlobalBounds().width / 4) - (text.getGlobalBounds().width / 2);
+		float txtPosY = 1.0 * (pos.y + sprite.getGlobalBounds().height / 4) - (text.getGlobalBounds().height / 2);
 		text.setPosition(txtPosX, txtPosY);
-	}
-
-	void setBgColor(sf::Color color) {
-		button.setFillColor(color);
 	}
 
 	void setTextColor(sf::Color color) {
 		text.setFillColor(color);
 	}
 
-	void renderTo(sf::RenderWindow &window) {
-		window.draw(button);
+	void drawTo(sf::RenderWindow &window) {
+		window.draw(sprite);
 		window.draw(text);
 	}
 
 	bool isMouseOver(sf::RenderWindow &window) {
-		float mouseX = sf::Mouse::getPosition(window).x;
-		float mouseY = sf::Mouse::getPosition(window).y;
+		int mouseX = sf::Mouse::getPosition(window).x;
+		int mouseY = sf::Mouse::getPosition(window).y;
 
-		float buttonX = button.getPosition().x;
-		float buttonY = button.getPosition().y;
+		int buttonX = sprite.getPosition().x;
+		int buttonY = sprite.getPosition().y;
 
-		return (mouseX >= buttonX && mouseX <= buttonX + button.getGlobalBounds().width) && (mouseY >= buttonY && mouseY <= buttonY + button.getGlobalBounds().height);
+		return (mouseX >= buttonX && mouseX <= buttonX + sprite.getGlobalBounds().width) && (mouseY >= buttonY && mouseY <= buttonY + sprite.getGlobalBounds().height);
 	}
 };

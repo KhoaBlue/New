@@ -3,30 +3,44 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <sstream>
+#include <iostream>;
 
 #define DELETE_KEY 8
 #define ENTER_KEY 13
 #define ESCAPE_KEY 27
+
 struct TextBox {
 	//Attributes
 	sf::Text textbox;
 	std::ostringstream text;
+	sf::Sprite sprite;
+	sf::Texture texture;
 	bool isSelected = false;
 	bool hasLimit = false;
 	int limit;
-	int idx;
 	
 	//Constructors
-	TextBox() {	}
-	TextBox(int size, sf::Color color, bool sel) {
-		textbox.setCharacterSize(size);
-		textbox.setFillColor(color);
+	TextBox(std::string filename, bool sel, float x, float y, int charSize) {
+		if (!texture.loadFromFile(filename)) {
+			std::cout << "Cannot load " + filename << std::endl;
+		}
+		sprite.setTexture(texture);
+		sprite.setPosition({x, y});
+
+		sf::Font font;
+		font.loadFromFile("../ManagementSystem/Poppins/Poppins-SemiBold.ttf");
+		textbox.setFont(font);
+		textbox.setCharacterSize(charSize);
+		textbox.setFillColor(sf::Color::White);
+		textbox.setPosition(x + 10.0f, y + sprite.getGlobalBounds().height / 2);
+		
 		isSelected = sel;
 		if (sel) {
 			textbox.setString("|");
 		}
 		else textbox.setString("");
-		idx = 0;
+		hasLimit = true;
+		limit = 32;
 	}
 
 	//Functions
@@ -66,6 +80,7 @@ struct TextBox {
 	}
 
 	void drawTo(sf::RenderWindow &window) {
+		window.draw(sprite);
 		window.draw(textbox);
 	}
 
@@ -96,11 +111,11 @@ struct TextBox {
 	}
 
 	bool isMouseOver(sf::RenderWindow &window) {
-		float MouseX = sf::Mouse::getPosition(window).x;
-		float MouseY = sf::Mouse::getPosition(window).y;
+		int MouseX = sf::Mouse::getPosition(window).x;
+		int MouseY = sf::Mouse::getPosition(window).y;
 
-		float PosX = textbox.getPosition().x;
-		float PosY = textbox.getPosition().y;
+		int PosX = textbox.getPosition().x;
+		int PosY = textbox.getPosition().y;
 
 		if (MouseX < PosX || MouseX > PosX + textbox.getGlobalBounds().width)
 			return false;
