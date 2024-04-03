@@ -127,6 +127,8 @@ void deleteClassList(Class *ClassList, int numOfClasses);
 void deleteSemesterList(Semester *SemesterList, int numOfSemesters);
 void deleteCourseList(Course *CourseList, int numOfCourses);
 void deleteSchoolYearList(SchoolYear *SyList, int numOfSchoolYears);
+void deleteCourse(SchoolYear* SyList, Semester* SemestersList, Course* CourseList, int numSY);
+void removeStudentFromCourse(SchoolYear* SyList, Semester* SemestersList, Course* CourseList, int numSY);
 
 //functions for ouputting
 void outputStaffList(Node<User> *StaffHead);
