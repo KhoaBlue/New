@@ -94,7 +94,7 @@ struct SchoolYear {
     string Name;
     string start_date;
     string end_date;
-    int numOfSemesters;
+    int numOfSemesters = 0;
     Semester* SemestersList;
     int NumOfClasses = 50;
     Class* ClassesList;
@@ -145,6 +145,8 @@ void initData(SchoolYear& currentSchoolYear);
 void addCourse(SchoolYear& schoolYear);
 void addStudentToCourse(SchoolYear &schoolYear); 
 
+void initSemester(Semester& sem);
+void createSemester(SchoolYear& sy);
 
 //View a list of his/her courses. He/she will study these courses in this semester.
 void viewListCourse(const Student& student, Semester& semester);
