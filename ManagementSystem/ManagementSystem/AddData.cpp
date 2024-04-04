@@ -300,3 +300,25 @@ void createSchoolYear(SchoolYear*& SyList, int& numSY) {
     numSY++;
     updateSchoolYearList(SyList, numSY);
 }
+
+void initSemester(Semester& sem) {
+    string name, start_date, end_date;
+    cout << "Input the name of this semester (1, 2, or 3): ";
+    cin >> name;
+    cout << "Input the start date of this semester: ";
+    cin >> start_date;
+    cout << "Input the end_date of this semester: ";
+    cin >> end_date;
+    sem = Semester(start_date, end_date);
+    sem.name = name;
+}
+
+void createSemester(SchoolYear& sy) {
+    if (sy.numOfSemesters == 3) {
+        cout << "Number of semesters is full.";
+    }
+    else {
+        sy.numOfSemesters++;
+        initSemester(sy.SemestersList[sy.numOfSemesters - 1]);
+    }
+}
