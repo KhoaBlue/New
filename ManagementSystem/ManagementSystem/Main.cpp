@@ -16,9 +16,6 @@ int main() {
 	Node<User> *pUser = nullptr;
 	loadStaffFromFile(StaffHead);
 	SchoolYear *currentSchoolYear = loadSchoolYearList(SyList, numSY);
-	string username, password;
-	//getline(cin, username);
-	//getline(cin, password);
 	//if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
 	//	cout << "SUCCESS" << endl;
 	//}
@@ -55,8 +52,8 @@ int main() {
 					}
 					if (ev.type == sf::Event::MouseButtonPressed) {
 						if (loginMenu.butLogIn.isMouseOver(window)) {
-							
-							
+							string username = loginMenu.tbUsername.text.str();
+							string password = loginMenu.tbPassword.text.str();
 							if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
 								currentPage = HomePage;
 								cout << "Login succeeded" << endl;
@@ -64,6 +61,7 @@ int main() {
 							else {
 								cout << "Login Failed" << endl;
 							}
+
 							cout << currentPage << endl;
 						}
 						if (loginMenu.butForgotPW.isMouseOver(window)) {

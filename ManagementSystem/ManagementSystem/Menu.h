@@ -8,7 +8,7 @@ struct LoginMenu {
 	Object oLoginSpace;
 	Object oUsername;
 	Object oPassword;
-	Object oIncorrectPass;
+	//Object oIncorrectPass;
 	Object oUsernameNotExist;
 	TextBox tbUsername;
 	TextBox tbPassword;
@@ -21,8 +21,8 @@ struct LoginMenu {
 		oLoginSpace.loadTexture("../ManagementSystem/Texture/LoginMenu/LoginSpace.png", 106.0f, 55.0f);
 		oUsername.loadTexture("../ManagementSystem/Texture/LoginMenu/Username.png", 198.0f, 314.0f);
 		oPassword.loadTexture("../ManagementSystem/Texture/LoginMenu/Password.png", 198.0f, 442.0f);
-		oIncorrectPass.loadTexture("../ManagementSystem/Texture/LoginMenu/IncorrectPass.png!", 376.0f, 508.0f);
-		oIncorrectPass.hide();
+		//oIncorrectPass.loadTexture("../ManagementSystem/Texture/LoginMenu/IncorrectPass.png!", 376.0f, 508.0f);
+		//oIncorrectPass.hide();
 		oUsernameNotExist.loadTexture("../ManagementSystem/Texture/LoginMenu/UsernameNotFound.png", 364.0f, 508.0f);
 		oUsernameNotExist.hide();
 		tbUsername.loadTexture("../ManagementSystem/Texture/LoginMenu/UsernameTextbox.png", false, 176.0f, 290.0f, 24);

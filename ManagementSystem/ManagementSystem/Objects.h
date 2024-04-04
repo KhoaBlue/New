@@ -62,8 +62,8 @@ struct Button : Object {
 
 	void setPos(sf::Vector2f pos) {
 		sprite.setPosition(pos);
-		float txtPosX = 1.0 * (pos.x + sprite.getGlobalBounds().width / 4) - (text.getGlobalBounds().width / 2);
-		float txtPosY = 1.0 * (pos.y + sprite.getGlobalBounds().height / 4) - (text.getGlobalBounds().height / 2);
+		float txtPosX = (float) (pos.x + sprite.getGlobalBounds().width / 4) - (text.getGlobalBounds().width / 2);
+		float txtPosY = (float)	(pos.y + sprite.getGlobalBounds().height / 4) - (text.getGlobalBounds().height / 2);
 		text.setPosition(txtPosX, txtPosY);
 	}
 
@@ -82,8 +82,8 @@ struct Button : Object {
 		int mouseX = sf::Mouse::getPosition(window).x;
 		int mouseY = sf::Mouse::getPosition(window).y;
 
-		int buttonX = sprite.getPosition().x;
-		int buttonY = sprite.getPosition().y;
+		float buttonX = sprite.getPosition().x;
+		float buttonY = sprite.getPosition().y;
 
 		return (mouseX >= buttonX && mouseX <= buttonX + sprite.getGlobalBounds().width) && (mouseY >= buttonY && mouseY <= buttonY + sprite.getGlobalBounds().height);
 	}
@@ -94,9 +94,9 @@ struct TextBox : Object {
 	sf::Text textbox;
 	std::ostringstream text;
 	sf::Font font;
-	int limit;
+	int limit = 21;
 	bool isSelected = false;
-	bool hasLimit = false;
+	bool hasLimit = true;
 	
 
 	//Constructors
@@ -133,9 +133,6 @@ struct TextBox : Object {
 			textbox.setString("|");
 		}
 		else textbox.setString("");
-		hasLimit = true;
-		limit = 32;
-
 	}
 
 	void clearText() {
@@ -213,8 +210,8 @@ struct TextBox : Object {
 	bool isMouseOver(sf::RenderWindow &window) {
 		int MouseX = sf::Mouse::getPosition(window).x;
 		int MouseY = sf::Mouse::getPosition(window).y;
-		int PosX = sprite.getPosition().x;
-		int PosY = sprite.getPosition().y;       
+		float PosX = sprite.getPosition().x;
+		float PosY = sprite.getPosition().y;       
 		if (MouseX < PosX || MouseX > PosX + sprite.getGlobalBounds().width)
 			return false;
 		if (MouseY < PosY || MouseY > PosY + sprite.getGlobalBounds().height)
