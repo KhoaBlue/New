@@ -126,3 +126,4 @@ void deleteCourse(SchoolYear* SyList, Semester* SemestersList, Course* CourseLis
 	}
 	if (!find) cout << "The course's ID doesn't exist";
 }
+

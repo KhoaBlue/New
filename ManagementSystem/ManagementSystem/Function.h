@@ -169,3 +169,6 @@ void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Co
 
 // 
 bool checkLogin(bool& role, Node<User>*& pUser, Node<Student>*& pStudent, string username, string password, SchoolYear*& currentSchoolYear, Node<User>* StaffHead);
+void viewScoreboardOfClass(Class clazz, Semester semester);
+void viewScoreboardOfStudent(Student student, Semester semester);
+void importScoreboardOfCourse(string pathFile, Semester semester);
