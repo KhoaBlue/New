@@ -275,7 +275,8 @@ void viewScoreboardOfClass(Class clazz, Semester semester) {
         + "/CoursesList.txt";
 
     ifstream file(path);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
         cout << "Error: Cannot open file " << path << endl;
         return;
     }
