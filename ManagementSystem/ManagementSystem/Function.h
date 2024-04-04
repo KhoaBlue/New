@@ -94,7 +94,7 @@ struct SchoolYear {
     string Name;
     string start_date;
     string end_date;
-    int numOfSemesters;
+    int numOfSemesters = 0;
     Semester* SemestersList;
     int NumOfClasses = 50;
     Class* ClassesList;
@@ -127,6 +127,8 @@ void deleteClassList(Class *ClassList, int numOfClasses);
 void deleteSemesterList(Semester *SemesterList, int numOfSemesters);
 void deleteCourseList(Course *CourseList, int numOfCourses);
 void deleteSchoolYearList(SchoolYear *SyList, int numOfSchoolYears);
+void deleteCourse(SchoolYear* SyList, Semester* SemestersList, Course* CourseList, int numSY);
+void removeStudentFromCourse(SchoolYear* SyList, Semester* SemestersList, Course* CourseList, int numSY);
 
 //functions for ouputting
 void outputStaffList(Node<User> *StaffHead);
@@ -143,6 +145,8 @@ void initData(SchoolYear& currentSchoolYear);
 void addCourse(SchoolYear& schoolYear);
 void addStudentToCourse(SchoolYear &schoolYear); 
 
+void initSemester(Semester& sem);
+void createSemester(SchoolYear& sy);
 
 //View a list of his/her courses. He/she will study these courses in this semester.
 void viewListCourse(const Student& student, Semester& semester);

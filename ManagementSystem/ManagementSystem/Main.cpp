@@ -29,9 +29,9 @@ int main() {
 	//}
 	/*outputStaffList(StaffHead);*/
 	
-	cout << currentSchoolYear->ClassesList[0].Name << endl;
-	outputStudentList(currentSchoolYear->ClassesList[0].stHead);
-	
+	//cout << currentSchoolYear->ClassesList[0].Name << endl;
+	//outputStudentList(currentSchoolYear->ClassesList[0].stHead);
+	//
 
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Student Management System", sf::Style::Close);
 	window.setFramerateLimit(60);
