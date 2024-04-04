@@ -16,7 +16,6 @@ int main() {
 	Node<User> *pUser = nullptr;
 	loadStaffFromFile(StaffHead);
 	SchoolYear *currentSchoolYear = loadSchoolYearList(SyList, numSY);
-	string username, password;
 	//getline(cin, username);
 	//getline(cin, password);
 	//if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
@@ -32,9 +31,9 @@ int main() {
 	//}
 	/*outputStaffList(StaffHead);*/
 	
-	cout << currentSchoolYear->ClassesList[0].Name << endl;
-	outputStudentList(currentSchoolYear->ClassesList[0].stHead);
-	
+	//cout << currentSchoolYear->ClassesList[0].Name << endl;
+	//outputStudentList(currentSchoolYear->ClassesList[0].stHead);
+	//
 
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Student Management System", sf::Style::Close);
 	window.setFramerateLimit(60);
@@ -55,8 +54,8 @@ int main() {
 					}
 					if (ev.type == sf::Event::MouseButtonPressed) {
 						if (loginMenu.butLogIn.isMouseOver(window)) {
-							
-							
+							string username = loginMenu.tbUsername.text.str();
+							string password = loginMenu.tbPassword.text.str();
 							if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
 								currentPage = HomePage;
 								cout << "Login succeeded" << endl;
