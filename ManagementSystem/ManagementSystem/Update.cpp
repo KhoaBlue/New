@@ -327,7 +327,7 @@ course
 CS162 23APCS1
 CS162 23APCS2
 */
-bool isStaff(string username) {
+bool isStaff2(string username) {
 	return (!isdigit(username[0]));
 }
 
@@ -526,7 +526,7 @@ void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear 
 		return;
 	}
 
-	if (isStaff(username)) {
+	if (isStaff2(username)) {
 		changePasswordForStaff(username, password, newPassword);
 		return; 
 	}
