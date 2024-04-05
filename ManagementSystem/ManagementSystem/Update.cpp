@@ -528,7 +528,7 @@ void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear 
 
 	if (isStaff(username)) {
 		changePasswordForStaff(username, password, newPassword);
-		return;
+		return; 
 	}
 
 	changePasswordForStudent(username, password, newPassword, currentSchoolYear);
