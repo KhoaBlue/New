@@ -256,3 +256,202 @@ bool checkLogin(bool &role, Node<User> *&pUser, Node<Student> *&pStudent, string
 	return (pStudent != nullptr || pUser != nullptr);
 }
 
+// Function 23: View the scoreboard of a class, including final marks of all courses in the semester, GPA in this semester, and the overall GPA.
+void viewScoreboardOfClass(Class clazz, Semester semester) {
+    double totalMark = 0;
+
+    double totalGPA = 0;
+    int totalStudent = 0;
+
+    double totalGPAOverall = 0;
+    int totalCourseGPA = 0;
+
+
+    cout << "View scoreboard of class " << clazz.Name << " in semester " << semester.name << endl;
+    // Read data list course of class
+    string path = "../data/SchoolYears/"
+        + semester.start_date + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesList.txt";
+
+    ifstream file(path);
+    if (!file.is_open()) 
+    {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    // Read data
+    string line;
+    getline(file, line);
+    int totalCourse = stoi(line);
+    cout << "Total course: " << totalCourse << endl;
+
+    while (getline(file, line)) {
+        istringstream iss(line);
+        string courseId, className;
+        getline(iss, courseId, ' ');
+        getline(iss, className, ' ');
+
+        if (clazz.Name != className) {
+            continue;
+        }
+        totalCourseGPA++;
+
+        // Read file in path
+        string pathChild = "../data/SchoolYears/"
+            + semester.start_date + "-" + semester.end_date
+            + "/" + semester.name
+            + "/CoursesStudents/"
+            + courseId + "_" + clazz.Name + ".csv";
+
+        // Read file
+        ifstream fileChild(pathChild);
+        if (!fileChild.is_open()) {
+            cout << "Error: Cannot open file " << pathChild << endl;
+            return;
+        }
+
+        cout << "With course " << courseId << endl;
+        cout << "\t" << left << setw(10) << "No" << setw(20) << "Student ID" << setw(30) << "Student Full Name" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Other" << setw(10) << "Total" << setw(10) << "GPA" << endl;
+        // Read data
+        string lineChild;
+        bool firstLine = true;
+        while (getline(fileChild, lineChild)) {
+            // Data of line: No,Student ID,Student Full Name,Midterm Mark,Final Mark,Other Mark,Total Mark,GPA
+
+            string token;
+            if (firstLine) {
+                firstLine = false;
+                continue;
+            }
+            istringstream iss(lineChild);
+            getline(iss, token, ',');
+            cout << "\t" << left << setw(10) << token; //no
+            cout << setw(20);
+            getline(iss, token, ',');
+            cout << token; // student id
+            cout << setw(30);
+            getline(iss, token, ',');
+            cout << token; // student full name
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // midterm
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // final
+            totalMark += stod(token);
+            totalStudent++;
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // other
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // total
+
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token << endl; // gpa
+        }
+
+        fileChild.close();
+
+        totalGPAOverall += totalMark / totalStudent;
+    }
+    file.close();
+
+    cout << "Total mark: " << totalMark << endl;
+    totalGPA = totalMark / totalStudent;
+    cout << "Total GPA: " << totalGPA << endl;
+    cout << "Overall GPA: " << totalGPAOverall / totalCourseGPA << endl;
+}
+
+
+
+// Function 24: View his/her scoreboard.
+void viewScoreboardOfStudent(Student student, Semester semester) {
+    // Read data list course of class
+    string path = "../data/SchoolYears/"
+        + semester.start_date + "-" + semester.end_date
+        + "/" + semester.name
+        + "/CoursesList.txt";
+
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << path << endl;
+        return;
+    }
+
+    // Read data
+    string line;
+    getline(file, line);
+    int totalCourse = stoi(line);
+
+    cout << "\t" << left << setw(20) << "Student ID" << setw(30) << "Student Full Name" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Other" << setw(10) << "Total" << setw(10) << "GPA" << endl;
+
+    while (getline(file, line)) {
+        istringstream iss(line);
+        string courseId, className;
+        getline(iss, courseId, ' ');
+        getline(iss, className, ' ');
+
+        if (student.Class != className) {
+            continue;
+        }
+
+        // Read file in path
+        string pathChild = "../data/SchoolYears/"
+            + semester.start_date + "-" + semester.end_date
+            + "/" + semester.name
+            + "/CoursesStudents/"
+            + courseId + "_" + className + ".csv";
+
+        // Read file
+        ifstream fileChild(pathChild);
+        if (!fileChild.is_open()) {
+            cout << "Error: Cannot open file " << pathChild << endl;
+            return;
+        }
+
+        cout << "Scoreboard of course " << courseId << endl;
+        // Read data
+        string lineChild;
+        bool firstLine = true;
+        while (getline(fileChild, lineChild)) {
+
+            string token;
+            if (firstLine) {
+                firstLine = false;
+                continue;
+            }
+            istringstream iss(lineChild);
+            getline(iss, token, ',');
+            getline(iss, token, ',');
+            if (token != student.StID) {
+                continue;
+            }
+            cout << "\t" << left << setw(20);
+            cout << token; // student id
+            cout << setw(30);
+            getline(iss, token, ',');
+            cout << token; // student full name
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // midterm
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // final
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // other
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token; // total
+            cout << setw(10);
+            getline(iss, token, ',');
+            cout << token << endl; // gpa
+        }
+    }
+
+}
+

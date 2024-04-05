@@ -211,6 +211,330 @@ void updateStudentResultInCourse(Semester semester, string studentId, string cou
     fileOut.close();
 }
 
+// function 20
+void importScoreboardOfCourse(string pathFile, Semester semester) {
+	// Read file
+	ifstream file(pathFile);
+	if (!file.is_open()) {
+		cout << "Error: Cannot open file " << pathFile << endl;
+		return;
+	}
+	// Read data
+	string line;
+	Node<string>* lines = nullptr;
+	bool firstLine = true;
+	while (getline(file, line)) {
+		if (firstLine) {
+			firstLine = false;
+			continue;
+		}
+		Node<string>* newNode = new Node<string>;
+		newNode->data = line;
+		cout << "Line: " << line << endl;
+		newNode->next = nullptr;
+		if (lines == nullptr) {
+			lines = newNode;
+		}
+		else {
+			Node<string>* current = lines;
+			while (current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = newNode;
+		}
+	}
+
+	file.close();
+
+	// Input new info
+	string className;
+	cout << "Enter class name: ";
+	cin >> className;
+	string courseID;
+	cout << "Enter course ID: ";
+	cin >> courseID;
+
+	string path = "../data/SchoolYears/"
+		+ semester.start_date + "-" + semester.end_date
+		+ "/" + semester.name
+		+ "/CoursesList.txt";
+
+	cout << "path: " << path << endl;
+
+	// Read file
+	ifstream fileCourse(path);
+	if (!fileCourse.is_open()) {
+		cout << "Error: Cannot open file " << path << endl;
+		return;
+	}
+
+	// Read data
+	getline(fileCourse, line);
+	int totalCourse = stoi(line);
+	cout << "Total course: " << totalCourse << endl;
+	bool isImported = false;
+
+	while (getline(fileCourse, line)) {
+		istringstream iss(line);
+		string courseIDFile;
+		getline(iss, courseIDFile, ' ');
+		string classNameFile;
+		getline(iss, classNameFile, ' ');
+
+		if (courseIDFile == courseID && classNameFile == className) {
+			// Write to file
+			ofstream fileOut("../data/SchoolYears/" + semester.start_date + "-" + semester.end_date + "/" + semester.name + "/CoursesStudents/" + courseID + "_" + className + ".csv", ios::app);
+			if (!fileOut.is_open()) {
+				cout << "Error: Cannot open file " << path << endl;
+				return;
+			}
+
+			// Write all lines to file
+			Node<string>* currentOutput = lines;
+			while (currentOutput != nullptr) {
+				fileOut << currentOutput->data << endl;
+				currentOutput = currentOutput->next;
+
+
+			}
+
+			fileOut.close();
+			isImported = true;
+			break;
+		}
+
+	}
+
+	if (isImported) {
+		cout << "Import scoreboard of course successfully" << endl;
+	}
+	else {
+		cout << "Cannot import scoreboard of course" << endl;
+	}
+
+
+	fileCourse.close();
+
+}
+
+/*
+Class
+23APCS1
+23APCS2
+23CLC03
+
+course
+CS162 23APCS1
+CS162 23APCS2
+*/
+bool isStaff2(string username) {
+	return (!isdigit(username[0]));
+}
+
+void changePasswordForStaff(string username, string password, string newPassword) {
+	// read data ./data/StaffList.csv
+	ifstream file("../data/StaffList.csv");
+	if (!file.is_open()) {
+		cout << "Error: Cannot open file StaffList.csv" << endl;
+		return;
+	}
+
+	// Read data
+	string line;
+	bool firstLine = true;
+	bool isSuccessful = false;
+
+	Node<string>* lines = nullptr;
+	while (getline(file, line)) {
+		if (firstLine) {
+			lines = new Node<string>;
+			lines->data = line;
+			lines->next = nullptr;
+			firstLine = false;
+			continue;
+		}
+
+		istringstream iss(line);
+		// Full name,DOB,Gender,Username,Password,Email
+		string fullname;
+		getline(iss, fullname, ',');
+		string dob;
+		getline(iss, dob, ',');
+		string gender;
+		getline(iss, gender, ',');
+		string usernameFile;
+		getline(iss, usernameFile, ',');
+		string passwordFile;
+		getline(iss, passwordFile, ',');
+		string email;
+		getline(iss, email, ',');
+
+		if (usernameFile == username && passwordFile != password) {
+			cout << "Password is incorrect" << endl;
+			return;
+		}
+
+		if (usernameFile == username && passwordFile == password) {
+			isSuccessful = true;
+			cout << "Change password successfully" << endl;
+			passwordFile = newPassword;
+		}
+
+		Node<string>* newNode = new Node<string>;
+		newNode->data = fullname + "," + dob + "," + gender + "," + usernameFile + "," + passwordFile + "," + email;
+		newNode->next = nullptr;
+		if (lines == nullptr) {
+			lines = newNode;
+		}
+		else {
+			Node<string>* current = lines;
+			while (current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = newNode;
+		}
+
+	}
+	file.close();
+
+	if (!isSuccessful) {
+		cout << "Cannot change password" << endl;
+		return;
+	}
+
+	// Write to file
+	ofstream fileOut("../data/StaffList.csv");
+	if (!fileOut.is_open()) {
+		cout << "Error: Cannot open file StaffList.csv" << endl;
+		return;
+	}
+
+	Node<string>* current = lines;
+	while (current != nullptr) {
+		fileOut << current->data << endl;
+		current = current->next;
+	}
+	fileOut.close();
+}
+
+void changePasswordForStudent(string username, string password, string newPassword, SchoolYear currentSchoolYear) {
+	// read data in all currentSchoolYear.ClassesList
+	for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+		string path = "../data/ClassesStudents/" + currentSchoolYear.ClassesList[i].Name + "/" + currentSchoolYear.ClassesList[i].Name + ".csv";
+		ifstream file(path);
+		if (!file.is_open()) {
+			cout << "Error: Cannot open file " << path << endl;
+			return;
+		}
+
+		// Read data
+		string line;
+		bool firstLine = true;
+		bool isSuccessful = false;
+
+		Node<string>* lines = nullptr;
+		while (getline(file, line)) {
+			if (firstLine) {
+				lines = new Node<string>;
+				lines->data = line;
+				lines->next = nullptr;
+				firstLine = false;
+				continue;
+			}
+
+			istringstream iss(line);
+			// No,Student ID,First name,Last name,Gender,Date of Birth,Social ID,Password
+			string no;
+			getline(iss, no, ',');
+			string studentID;
+			getline(iss, studentID, ',');
+			string firstName;
+			getline(iss, firstName, ',');
+			string lastName;
+			getline(iss, lastName, ',');
+			string gender;
+			getline(iss, gender, ',');
+			string dob;
+			getline(iss, dob, ',');
+			string socialID;
+			getline(iss, socialID, ',');
+			string passwordFile;
+			getline(iss, passwordFile, ',');
+
+			if (studentID == username && passwordFile != password) {
+				cout << "Password is incorrect" << endl;
+				return;
+			}
+
+			if (studentID == username && passwordFile == password) {
+				isSuccessful = true;
+				cout << "Change password successfully" << endl;
+				passwordFile = newPassword;
+			}
+
+
+			Node<string>* newNode = new Node<string>;
+			newNode->data = no + "," + studentID + "," + firstName + "," + lastName + "," + gender + "," + dob + "," + socialID + "," + passwordFile;
+			newNode->next = nullptr;
+			if (lines == nullptr) {
+				lines = newNode;
+			}
+			else {
+				Node<string>* current = lines;
+				while (current->next != nullptr) {
+					current = current->next;
+				}
+				current->next = newNode;
+			}
+		}
+		file.close();
+
+		if (!isSuccessful) {
+			cout << "Cannot change password" << endl;
+			return;
+		}
+
+		// Write to file
+		ofstream fileOut(path);
+		if (!fileOut.is_open()) {
+			cout << "Error: Cannot open file " << path << endl;
+			return;
+		}
+
+		Node<string>* current = lines;
+		while (current != nullptr) {
+			fileOut << current->data << endl;
+			current = current->next;
+		}
+		fileOut.close();
+	}
+}
+
+void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear currentSchoolYear) {
+	string username, password, newPassword, confirmNewPassword;
+	cout << "Enter your username: ";
+	cin >> username;
+	cout << "Enter your current password: ";
+	cin >> password;
+	cout << "Enter your new password: ";
+	cin >> newPassword;
+	cout << "Confirm your confirm new password: ";
+	cin >> confirmNewPassword;
+
+	if (newPassword != confirmNewPassword) {
+		cout << "New password and confirm new password are not the same" << endl;
+		return;
+	}
+
+	if (isStaff2(username)) {
+		changePasswordForStaff(username, password, newPassword);
+		return; 
+	}
+
+	changePasswordForStudent(username, password, newPassword, currentSchoolYear);
+
+}
+
 void updateCourseID(Course& course, string newID) {
     if (!newID.empty())
         course.ID = newID;
