@@ -210,3 +210,114 @@ void updateStudentResultInCourse(Semester semester, string studentId, string cou
     }
     fileOut.close();
 }
+
+void updateCourseID(Course& course, string newID) {
+    if (!newID.empty())
+        course.ID = newID;
+}
+
+void updateCourseName(Course& course, string newName) {
+    if (!newName.empty())
+        course.Name = newName;
+}
+
+void updateCourseLecturer(Course& course, string lecturer) {
+    if (!lecturer.empty())
+        course.Lecturer = lecturer;
+}
+
+void updateCourseDayOfWeek(Course& course, string newDay) {
+    if (!newDay.empty())
+        course.DayOfWeek = newDay;
+}
+
+bool updateCourseMaxStudents(Course &course, int newMax) {
+    if (newMax < 0) return false;
+    course.maxStudent = newMax;
+    return true;
+}
+
+
+bool updateCourseNumOfCredits(Course &course, int newNumOfCredits) {
+    if (newNumOfCredits < 0) return false;
+    course.NumOfCredits = newNumOfCredits;
+    return true;
+}
+
+
+bool updateCourseSession(Course& course, int newSession) {
+    if (newSession < 1 || newSession > 4) return false;
+    course.session = newSession;
+    return true;
+}
+
+/*
+Switch case options:
+1. Change ID
+2. Change name;
+3. Change lecturer
+4. Change maxStudents
+5. Change numOfCredits
+6. Change session dayOfWeek
+7. Change session time
+*/
+
+void updateCourseInfo(Course& course, int option) {
+    switch (option) {
+        case 1: {
+            string newID;
+            cout << "Enter new course ID: ";
+            getline(cin, newID);
+            updateCourseID(course, newID);
+            break;
+        }
+        case 2: {
+            string newName;
+            cout << "Enter new course name: ";
+            getline(cin, newName);
+            updateCourseName(course, newName);
+            break;
+        }
+        case 3: {
+            string newLecturer;
+            cout << "Enter new course lecturer's name: ";
+            getline(cin, newLecturer);
+            updateCourseLecturer(course, newLecturer);
+            break;
+        }
+        case 4: {
+            int newMaxOfStudents;
+            cout << "Enter new max number of students: ";
+            cin >> newMaxOfStudents;
+            if (!updateCourseMaxStudents(course, newMaxOfStudents)) {
+                cout << "Invalid number of max students!";
+            }
+            break;
+        }
+        case 5: {
+            int newNumOfCredits;
+            cout << "Enter new number of credits: ";
+            cin >> newNumOfCredits;
+            if (!updateCourseNumOfCredits(course, newNumOfCredits)) {
+                cout << "Invalid number of credits!";
+            }
+            break;
+        }
+        case 6: {
+            string newDayOfWeek;
+            cout << "Enter new course day of the week: ";
+            getline(cin, newDayOfWeek);
+            updateCourseDayOfWeek(course, newDayOfWeek);
+            break;
+        }
+        case 7: {
+            int newSession;
+            cout << "Enter new course session hour: ";
+            cin >> newSession;
+            if (updateCourseSession(course, newSession)) {
+                cout << "Invalid session hour!";
+            }
+            break;
+        }
+    }
+}

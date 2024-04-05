@@ -119,6 +119,7 @@ void updateCourseToFile(Course co, string filename);
 void updateClassList(Class *ClassList, int numClass, string filename);
 void updateStudentToFile(Node<Student> *pHead, string filename);
 void updateStaffToFile(Node<User> *pHead);
+void updateCourseInfo(Course& course, int option);
 
 //functions for deleting data:
 void deleteStaffList(Node<User> *StaffHead);
