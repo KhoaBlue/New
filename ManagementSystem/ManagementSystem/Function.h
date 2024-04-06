@@ -23,10 +23,10 @@ struct Time
 struct Mark {
     string CourseID;
     string Type;
-    float TotalMark;
-    float FinalMark;
-    float MidtermMark;
-    float OtherMark;
+    float TotalMark = -1;
+    float FinalMark = -1;
+    float MidtermMark = -1;
+    float OtherMark =-1;
 };
 
 struct User {

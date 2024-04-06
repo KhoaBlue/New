@@ -189,16 +189,16 @@ void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Co
     cout << "Enter the course's ID to export list of students:";
     string tem; cin >> tem;
     ofstream fout;
-    string filename = "../data/Export/" + SyList[0].Name + "/Semester2/" + tem + ".csv";
+    string filename = "../data/Export/" + SyList[0].Name + "/Semester1/" + tem + ".csv";
     fout.open(filename);
     bool find = false;
     if (!fout.is_open()) cout << "Can't export the list";
     else {
-        for (int i = 0; i < SyList[0].SemestersList[1].numOfCourses; ++i) {
-            if (tem == SyList[0].SemestersList[1].CoursesList[i].ID) {
+        for (int i = 0; i < SyList[0].SemestersList[0].numOfCourses; ++i) {
+            if (tem == SyList[0].SemestersList[0].CoursesList[i].ID) {
                 find = true;
-                Node <Student>* current = SyList[0].SemestersList[1].CoursesList[i].stHead;
-                fout << SyList[0].SemestersList[1].CoursesList[i].numOfStudent << endl;
+                Node <Student>* current = SyList[0].SemestersList[0].CoursesList[i].stHead;
+                fout << SyList[0].SemestersList[0].CoursesList[i].numOfStudent << endl;
                 fout << "ID,Fullname,StudentID" << endl;
                 int cnt = 1;
                 while (current) {
@@ -212,6 +212,7 @@ void exportListOfStudentsInCourse(SchoolYear* SyList, Semester* SemesterList, Co
         }
         if (!find) cout << "Course's ID doesn't exist" << endl;
     }
+    fout.close();
 }
 
 bool isStaff(string username) {
