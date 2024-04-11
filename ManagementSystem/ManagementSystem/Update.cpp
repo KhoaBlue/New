@@ -6,6 +6,7 @@ void updateSchoolYearList(SchoolYear* SyList, int numSY)
 	fout << numSY << endl;
 	for (int i = 0; i < numSY; ++i) {
 		fout << SyList[i].Name << endl;
+		fout << SyList[i].numOfSemesters << endl;
 		updateClassList(SyList[i].ClassesList, SyList[i].NumOfClasses, "../data/SchoolYears/" + SyList[i].Name + "/ClassList.txt");
 	}
 	fout.close();

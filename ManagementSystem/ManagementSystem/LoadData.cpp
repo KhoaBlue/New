@@ -12,10 +12,13 @@ SchoolYear* loadSchoolYearList(SchoolYear*& SyList, int& numSY)
 	SyList = new SchoolYear[numSY];
 	for (int i = 0; i < numSY; ++i) {
 		fin >> SyList[i].Name;
+		fin >> SyList[i].numOfSemesters;
 		loadClassList(SyList[i].ClassesList, SyList[i].NumOfClasses, "../data/SchoolYears/" + SyList[i].Name + "/ClassesList.txt");
 		SyList[i].SemestersList = new Semester[3];
-		for (int j = 0; j < 3; ++j) {
-			loadSemesterFromFile(SyList[i].SemestersList[j], "../data/SchoolYears/" + SyList[i].Name + "/Semester " + to_string(j + 1) + "/");
+		for (int j = 0; j < SyList[i].numOfSemesters; ++j) {
+			if (!loadSemesterFromFile(SyList[i].SemestersList[j], "../data/SchoolYears/" + SyList[i].Name + "/Semester " + to_string(j + 1) + "/")) {
+				cout << "Cannot load Semesters of " << SyList[i].Name << endl;
+			}
 		}
 	}
 	fin.close();

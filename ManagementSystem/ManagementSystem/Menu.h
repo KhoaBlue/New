@@ -68,3 +68,4 @@ struct ForgotPassMenu {
 	void handleClicking(sf::RenderWindow &window);
 	void handleTyping(sf::RenderWindow &window, sf::Event ev);
 };
+

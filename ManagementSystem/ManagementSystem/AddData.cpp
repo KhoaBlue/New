@@ -282,9 +282,9 @@ void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses)
     getline(cin, sy.end_date);
     addClasses(sy, OldClasses, NumOldClasses);
     sy.SemestersList = new Semester[3];
-    for (int i = 0; i < 3; ++i) {
-        sy.SemestersList[i].CoursesList = new Course[100];
-    }
+    //for (int i = 0; i < 3; ++i) {
+    //    sy.SemestersList[i].CoursesList = new Course[100];
+    //}
 }
 
 void createSchoolYear(SchoolYear*& SyList, int& numSY) {

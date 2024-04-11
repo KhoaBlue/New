@@ -23,10 +23,10 @@ struct Time
 struct Mark {
     string CourseID;
     string Type;
-    float TotalMark;
-    float FinalMark;
-    float MidtermMark;
-    float OtherMark;
+    float TotalMark = -1;
+    float FinalMark = -1;
+    float MidtermMark = -1;
+    float OtherMark = -1;
 };
 
 struct User {
@@ -83,7 +83,7 @@ struct Semester {
     string name;
     string start_date;
     string end_date;
-    Course* CoursesList;
+    Course* CoursesList = nullptr;
     int numOfCourses;   
     Semester() : start_date(""), end_date(""), numOfCourses(0), CoursesList(nullptr), name("") {}
     Semester(const string &start, const string &end)

@@ -18,6 +18,7 @@ struct Object {
 	//	sprite.setTexture(texture);
 	//	sprite.setPosition(x, y);
 	//}
+
 	void loadTexture(std::string filename, float x, float y) {
 		texture.loadFromFile(filename);
 		sprite.setTexture(texture);
@@ -42,6 +43,7 @@ struct Button : Object {
 	//Attributes
 	sf::Text text;
 	sf::Font font;
+
 	//Button(std::string filename, float x, float y) : Object(filename, x, y) {
 	//	text.setString("");
 	//	font.loadFromFile("../ManagementSystem/Poppins/Poppins-SemiBold.ttf");
