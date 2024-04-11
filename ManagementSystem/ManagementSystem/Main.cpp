@@ -2,10 +2,25 @@
 #include "Menu.h"
 
 using namespace std;
-
 #define Login 0
 #define ForgotPass 1
-#define HomePage 2
+
+
+#define StudentMainMenu 2
+#define StudentProfile 4
+//Student section: define from 10 - 19
+
+
+
+
+#define StaffMainMenu 3		
+#define StaffProfile 5
+//Create new School year: 20-29
+//Create new Semester: 30 - 39
+//Academic infor : 40 - 49
+//Result: 50 - 59
+
+
 
 int main() {
 	SchoolYear *SyList;
