@@ -328,3 +328,321 @@ course
 CS162 23APCS1
 CS162 23APCS2
 */
+bool isStaff2(string username) {
+	return (!isdigit(username[0]));
+}
+
+void changePasswordForStaff(string username, string password, string newPassword) {
+	// read data ./data/StaffList.csv
+	ifstream file("../data/StaffList.csv");
+	if (!file.is_open()) {
+		cout << "Error: Cannot open file StaffList.csv" << endl;
+		return;
+	}
+
+	// Read data
+	string line;
+	bool firstLine = true;
+	bool isSuccessful = false;
+
+	Node<string>* lines = nullptr;
+	while (getline(file, line)) {
+		if (firstLine) {
+			lines = new Node<string>;
+			lines->data = line;
+			lines->next = nullptr;
+			firstLine = false;
+			continue;
+		}
+
+		istringstream iss(line);
+		// Full name,DOB,Gender,Username,Password,Email
+		string fullname;
+		getline(iss, fullname, ',');
+		string dob;
+		getline(iss, dob, ',');
+		string gender;
+		getline(iss, gender, ',');
+		string usernameFile;
+		getline(iss, usernameFile, ',');
+		string passwordFile;
+		getline(iss, passwordFile, ',');
+		string email;
+		getline(iss, email, ',');
+
+		if (usernameFile == username && passwordFile != password) {
+			cout << "Password is incorrect" << endl;
+			return;
+		}
+
+		if (usernameFile == username && passwordFile == password) {
+			isSuccessful = true;
+			cout << "Change password successfully" << endl;
+			passwordFile = newPassword;
+		}
+
+		Node<string>* newNode = new Node<string>;
+		newNode->data = fullname + "," + dob + "," + gender + "," + usernameFile + "," + passwordFile + "," + email;
+		newNode->next = nullptr;
+		if (lines == nullptr) {
+			lines = newNode;
+		}
+		else {
+			Node<string>* current = lines;
+			while (current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = newNode;
+		}
+
+	}
+	file.close();
+
+	if (!isSuccessful) {
+		cout << "Cannot change password" << endl;
+		return;
+	}
+
+	// Write to file
+	ofstream fileOut("../data/StaffList.csv");
+	if (!fileOut.is_open()) {
+		cout << "Error: Cannot open file StaffList.csv" << endl;
+		return;
+	}
+
+	Node<string>* current = lines;
+	while (current != nullptr) {
+		fileOut << current->data << endl;
+		current = current->next;
+	}
+	fileOut.close();
+}
+
+void changePasswordForStudent(string username, string password, string newPassword, SchoolYear currentSchoolYear) {
+	// read data in all currentSchoolYear.ClassesList
+	for (int i = 0; i < currentSchoolYear.NumOfClasses; i++) {
+		string path = "../data/ClassesStudents/" + currentSchoolYear.ClassesList[i].Name + "/" + currentSchoolYear.ClassesList[i].Name + ".csv";
+		ifstream file(path);
+		if (!file.is_open()) {
+			cout << "Error: Cannot open file " << path << endl;
+			return;
+		}
+
+		// Read data
+		string line;
+		bool firstLine = true;
+		bool isSuccessful = false;
+
+		Node<string>* lines = nullptr;
+		while (getline(file, line)) {
+			if (firstLine) {
+				lines = new Node<string>;
+				lines->data = line;
+				lines->next = nullptr;
+				firstLine = false;
+				continue;
+			}
+
+			istringstream iss(line);
+			// No,Student ID,First name,Last name,Gender,Date of Birth,Social ID,Password
+			string no;
+			getline(iss, no, ',');
+			string studentID;
+			getline(iss, studentID, ',');
+			string firstName;
+			getline(iss, firstName, ',');
+			string lastName;
+			getline(iss, lastName, ',');
+			string gender;
+			getline(iss, gender, ',');
+			string dob;
+			getline(iss, dob, ',');
+			string socialID;
+			getline(iss, socialID, ',');
+			string passwordFile;
+			getline(iss, passwordFile, ',');
+
+			if (studentID == username && passwordFile != password) {
+				cout << "Password is incorrect" << endl;
+				return;
+			}
+
+			if (studentID == username && passwordFile == password) {
+				isSuccessful = true;
+				cout << "Change password successfully" << endl;
+				passwordFile = newPassword;
+			}
+
+
+			Node<string>* newNode = new Node<string>;
+			newNode->data = no + "," + studentID + "," + firstName + "," + lastName + "," + gender + "," + dob + "," + socialID + "," + passwordFile;
+			newNode->next = nullptr;
+			if (lines == nullptr) {
+				lines = newNode;
+			}
+			else {
+				Node<string>* current = lines;
+				while (current->next != nullptr) {
+					current = current->next;
+				}
+				current->next = newNode;
+			}
+		}
+		file.close();
+
+		if (!isSuccessful) {
+			cout << "Cannot change password" << endl;
+			return;
+		}
+
+		// Write to file
+		ofstream fileOut(path);
+		if (!fileOut.is_open()) {
+			cout << "Error: Cannot open file " << path << endl;
+			return;
+		}
+
+		Node<string>* current = lines;
+		while (current != nullptr) {
+			fileOut << current->data << endl;
+			current = current->next;
+		}
+		fileOut.close();
+	}
+}
+
+void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear currentSchoolYear) {
+	string username, password, newPassword, confirmNewPassword;
+	cout << "Enter your username: ";
+	cin >> username;
+	cout << "Enter your current password: ";
+	cin >> password;
+	cout << "Enter your new password: ";
+	cin >> newPassword;
+	cout << "Confirm your confirm new password: ";
+	cin >> confirmNewPassword;
+
+	if (newPassword != confirmNewPassword) {
+		cout << "New password and confirm new password are not the same" << endl;
+		return;
+	}
+
+	if (isStaff2(username)) {
+		changePasswordForStaff(username, password, newPassword);
+		return; 
+	}
+
+	changePasswordForStudent(username, password, newPassword, currentSchoolYear);
+
+}
+
+void updateCourseID(Course& course, string newID) {
+    if (!newID.empty())
+        course.ID = newID;
+}
+
+void updateCourseName(Course& course, string newName) {
+    if (!newName.empty())
+        course.Name = newName;
+}
+
+void updateCourseLecturer(Course& course, string lecturer) {
+    if (!lecturer.empty())
+        course.Lecturer = lecturer;
+}
+
+void updateCourseDayOfWeek(Course& course, string newDay) {
+    if (!newDay.empty())
+        course.DayOfWeek = newDay;
+}
+
+bool updateCourseMaxStudents(Course &course, int newMax) {
+    if (newMax < 0) return false;
+    course.maxStudent = newMax;
+    return true;
+}
+
+
+bool updateCourseNumOfCredits(Course &course, int newNumOfCredits) {
+    if (newNumOfCredits < 0) return false;
+    course.NumOfCredits = newNumOfCredits;
+    return true;
+}
+
+
+bool updateCourseSession(Course& course, int newSession) {
+    if (newSession < 1 || newSession > 4) return false;
+    course.session = newSession;
+    return true;
+}
+
+/*
+Switch case options:
+1. Change ID
+2. Change name;
+3. Change lecturer
+4. Change maxStudents
+5. Change numOfCredits
+6. Change session dayOfWeek
+7. Change session time
+*/
+
+void updateCourseInfo(Course& course, int option) {
+    switch (option) {
+        case 1: {
+            string newID;
+            cout << "Enter new course ID: ";
+            getline(cin, newID);
+            updateCourseID(course, newID);
+            break;
+        }
+        case 2: {
+            string newName;
+            cout << "Enter new course name: ";
+            getline(cin, newName);
+            updateCourseName(course, newName);
+            break;
+        }
+        case 3: {
+            string newLecturer;
+            cout << "Enter new course lecturer's name: ";
+            getline(cin, newLecturer);
+            updateCourseLecturer(course, newLecturer);
+            break;
+        }
+        case 4: {
+            int newMaxOfStudents;
+            cout << "Enter new max number of students: ";
+            cin >> newMaxOfStudents;
+            if (!updateCourseMaxStudents(course, newMaxOfStudents)) {
+                cout << "Invalid number of max students!";
+            }
+            break;
+        }
+        case 5: {
+            int newNumOfCredits;
+            cout << "Enter new number of credits: ";
+            cin >> newNumOfCredits;
+            if (!updateCourseNumOfCredits(course, newNumOfCredits)) {
+                cout << "Invalid number of credits!";
+            }
+            break;
+        }
+        case 6: {
+            string newDayOfWeek;
+            cout << "Enter new course day of the week: ";
+            getline(cin, newDayOfWeek);
+            updateCourseDayOfWeek(course, newDayOfWeek);
+            break;
+        }
+        case 7: {
+            int newSession;
+            cout << "Enter new course session hour: ";
+            cin >> newSession;
+            if (updateCourseSession(course, newSession)) {
+                cout << "Invalid session hour!";
+            }
+            break;
+        }
+    }
+}

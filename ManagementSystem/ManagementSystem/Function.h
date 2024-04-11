@@ -119,6 +119,7 @@ void updateCourseToFile(Course co, string filename);
 void updateClassList(Class *ClassList, int numClass, string filename);
 void updateStudentToFile(Node<Student> *pHead, string filename);
 void updateStaffToFile(Node<User> *pHead);
+void updateCourseInfo(Course& course, int option);
 
 //functions for deleting data:
 void deleteStaffList(Node<User> *StaffHead);
@@ -172,3 +173,4 @@ bool checkLogin(bool& role, Node<User>*& pUser, Node<Student>*& pStudent, string
 void viewScoreboardOfClass(Class clazz, Semester semester);
 void viewScoreboardOfStudent(Student student, Semester semester);
 void importScoreboardOfCourse(string pathFile, Semester semester);
+void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear currentSchoolYear);
