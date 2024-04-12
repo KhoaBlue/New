@@ -41,7 +41,6 @@ void deleteSemesterList(Semester* SemesterList, int numOfSemester)
 
 void deleteSchoolYearList(SchoolYear* SyList, int numOfSchoolYears) {
 	for (int i = 0; i < numOfSchoolYears; ++i) {
-		//deleteStudentList(SyList[i].ClassesList->stHead);
 		deleteClassList(SyList[i].ClassesList, SyList[i].NumOfClasses);
 		deleteSemesterList(SyList[i].SemestersList, SyList[i].numOfSemesters);
 	}

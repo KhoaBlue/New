@@ -40,35 +40,43 @@ bool loadSemesterFromFile(Semester& se, string filename) {
 	getline(fin, se.start_date);
 	getline(fin, se.end_date);
 	fin.close();
-	loadCourseList(se.CoursesList, se.numOfCourses, filename);
+	if (!loadCourseList(se.CoursesList, se.numOfCourses, filename)) {
+		cout << "Cannot load CoursesList: " << filename << endl;
+		return false;
+	}
 	return true;
 }
 
-void loadCourseList(Course*& CourseList, int& numOfCourse, string filename)
+bool loadCourseList(Course*& CourseList, int& numOfCourse, string filename)
 {
 	ifstream fin(filename + "CoursesList.txt");
 	if (!fin) {
 		cout << "Cannot loadCourseList!" << endl;
-		return;
+		return false;
 	}
 	fin >> numOfCourse;
 	CourseList = new Course[numOfCourse];
 	for (int i = 0; i < numOfCourse; ++i) {
 		fin >> CourseList[i].ID;
 		fin >> CourseList[i].ClassName;
-		loadCourseInfoFromFile(CourseList[i], filename + "CoursesInfo/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".txt");
-		loadCourseStudents(CourseList[i], filename + "CoursesStudents/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".csv");
+		if (!loadCourseInfoFromFile(CourseList[i], filename + "CoursesInfo/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".txt")) {
+			return false;
+		}
+		if (!loadCourseStudents(CourseList[i], filename + "CoursesStudents/" + CourseList[i].ID + "_" + CourseList[i].ClassName + ".csv")) {
+			return false;
+		}
 	}
 	fin.close();
+	return true;
 }
 
-void loadCourseInfoFromFile(Course& co, string filename)
+bool loadCourseInfoFromFile(Course& co, string filename)
 {
 	ifstream fin(filename);
 	if (!fin) {
 		cout << filename << endl;
 		cout << "Cannot loadCourseInfoFromFile" << endl;
-		return;
+		return false;
 	}
 
 	getline(fin, co.Name);
@@ -81,14 +89,15 @@ void loadCourseInfoFromFile(Course& co, string filename)
 	getline(fin, co.start_date);
 	getline(fin, co.end_date);
 	fin.close();
+	return true;
 }
 
-void loadCourseStudents(Course& co, string filename)
+bool loadCourseStudents(Course& co, string filename)
 {
 	ifstream fin(filename);
 	if (!fin) {
 		cout << "Cannot loadCourseStudents" << endl;
-		return;
+		return false;
 	}
 	string line;
 	Node<Student>* cur = nullptr;
@@ -123,83 +132,125 @@ void loadCourseStudents(Course& co, string filename)
 		res.Type = mark;
 		cur->data.setResult(co.ID, res);
 	}
+	return true;
 }
 
-void loadClassList(Class*& ClassList, int& numClass, string filename)
+bool loadClassList(Class*& ClassList, int& numClass, string filename)
 {
 	ifstream fin(filename);
 	if (!fin) {
 		cout << "Cannot loadClassList!";
-		return;
+		return false;
 	}
 	fin >> numClass;
 	ClassList = new Class[numClass];
 	for (int i = 0; i < numClass; ++i) {
 		fin >> ClassList[i].Name;
-		loadStudentFromFile(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv");
+		if (!loadStudentFromFile(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv")) {
+			return false;
+		}
+		if (!loadStudentsCoursesAttending(ClassList[i].stHead,"../data/ClassesStudents/" + ClassList[i].Name + "/CourseAttending/")) {
+			return false;
+		}
 	}
 	fin.close();
+	return true;
 }
 
-void loadStudentFromFile(Node<Student>*& pHead, string filename) {
+bool loadStudentFromFile(Node<Student>*& pHead,  string filename) {
 	ifstream fin;
 	fin.open(filename);
+	if (!fin) {
+		cout << "Cannot open file " << filename << endl;
+		return false;
+	}
 	Node<Student>* pCur = nullptr;
 	string line;
-	if (fin.is_open()) {
-		getline(fin, line);
-		while (getline(fin, line)) {
-			if (pCur == nullptr) {
-				pCur = new Node<Student>;
-				pHead = pCur;
-			}
-			else {
-				pCur->next = new Node<Student>;
-				pCur = pCur->next;
-			}
-			stringstream inputString(line);
-			string no;
-			getline(inputString, no, ',');
-			getline(inputString, pCur->data.StID, ',');
-			getline(inputString, pCur->data.FirstName, ',');
-			getline(inputString, pCur->data.LastName, ',');
-			string genderFromFile;
-			getline(inputString, genderFromFile, ',');
-			pCur->data.Gender = (genderFromFile[0] == 'M');
-			getline(inputString, pCur->data.DOB, ',');
-			getline(inputString, pCur->data.SocialID, ',');
-			getline(inputString, pCur->data.Password, '\n');
+	if (!fin) return false;
+	getline(fin, line);
+	while (getline(fin, line)) {
+		if (pCur == nullptr) {
+			pCur = new Node<Student>;
+			pHead = pCur;
 		}
+		else {
+			pCur->next = new Node<Student>;
+			pCur = pCur->next;
+		}
+		stringstream inputString(line);
+		string no;
+		getline(inputString, no, ',');
+		getline(inputString, pCur->data.StID, ',');
+		getline(inputString, pCur->data.FirstName, ',');
+		getline(inputString, pCur->data.LastName, ',');
+		string genderFromFile;
+		getline(inputString, genderFromFile, ',');
+		pCur->data.Gender = (genderFromFile[0] == 'M');
+		getline(inputString, pCur->data.DOB, ',');
+		getline(inputString, pCur->data.SocialID, ',');
+		getline(inputString, pCur->data.Password, '\n');
 	}
 	fin.close();
+	return true;
 }
 
-void loadStaffFromFile(Node<User>*& pHead) {
-	ifstream fin;
-	fin.open("../data/StaffList.csv");
-	Node<User>* pCur = nullptr;
-	string line;
-	if (fin.is_open()) {
-		getline(fin, line);
-		while (getline(fin, line)) {
-			if (pCur == nullptr) {
-				pCur = new Node<User>;
-				pHead = pCur;
-			}
-			else {
-				pCur->next = new Node<User>;
-				pCur = pCur->next;
-			}
-			stringstream inputString(line);
-			getline(inputString, pCur->data.Fullname, ',');
-			getline(inputString, pCur->data.DOB, ',');
-			string genderFromFile;
-			getline(inputString, genderFromFile, ',');
-			pCur->data.Gender = (genderFromFile[0] == 'M');
-			getline(inputString, pCur->data.Username, ',');
-			getline(inputString, pCur->data.Password, ',');
-			getline(inputString, pCur->data.Email, '\n');
+bool loadStudentsCoursesAttending(Node<Student> *stHead, string filename)
+{
+	Node<Student> *pCur = stHead;
+	while (pCur) {
+		if (!loadStudentCourses(pCur, filename + pCur->data.StID + ".txt")) {
+			return false;
 		}
+		pCur = pCur->next;
+	}
+	return true;
+}
+
+bool loadStudentCourses(Node<Student> *student, string filename)
+{
+	ifstream fin(filename);
+	if (!fin) {
+		cout << "Cannot load " << filename << endl;
+		return false;
+	}
+	fin >> student->data.numOfCoursesAttending;
+	fin.ignore();
+	for (int i = 0; i < student->data.numOfCoursesAttending; ++i) {
+		getline(fin, student->data.courseID[i]);
+		getline(fin, student->data.courseName[i]);
 	}
 	fin.close();
+	return true;
+}
+
+bool loadStaffFromFile(Node<User>*& pHead) {
+	ifstream fin;
+	fin.open("../data/StaffList.csv");
+	if (!fin) {
+		return false;
+	}
+	Node<User>* pCur = nullptr;
+	string line;
+	getline(fin, line);
+	while (getline(fin, line)) {
+		if (pCur == nullptr) {
+			pCur = new Node<User>;
+			pHead = pCur;
+		}
+		else {
+			pCur->next = new Node<User>;
+			pCur = pCur->next;
+		}
+		stringstream inputString(line);
+		getline(inputString, pCur->data.Fullname, ',');
+		getline(inputString, pCur->data.DOB, ',');
+		string genderFromFile;
+		getline(inputString, genderFromFile, ',');
+		pCur->data.Gender = (genderFromFile[0] == 'M');
+		getline(inputString, pCur->data.Username, ',');
+		getline(inputString, pCur->data.Password, ',');
+		getline(inputString, pCur->data.Email, '\n');
+	}
+	fin.close();
+	return true;
 }

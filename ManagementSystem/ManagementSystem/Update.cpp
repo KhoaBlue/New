@@ -7,12 +7,15 @@ void updateSchoolYearList(SchoolYear* SyList, int numSY)
 	for (int i = 0; i < numSY; ++i) {
 		fout << SyList[i].Name << endl;
 		fout << SyList[i].numOfSemesters << endl;
-		updateClassList(SyList[i].ClassesList, SyList[i].NumOfClasses, "../data/SchoolYears/" + SyList[i].Name + "/ClassList.txt");
+		updateClassList(SyList[i].ClassesList, SyList[i].NumOfClasses, "../data/SchoolYears/" + SyList[i].Name + "/ClassesList.txt");
+		for (int j = 0; j < SyList[i].numOfSemesters; ++j) {
+			updateSemesterToFile(SyList[i].SemestersList[j], "../data/SchoolYears/" + SyList[i].Name + "/Semester " + to_string(j + 1) + "/");
+		}
 	}
 	fout.close();
 }
 
-void updateSemesterToFile(Semester se, string filename) {
+void updateSemesterToFile(Semester &se, string filename) {
 	ofstream fout(filename + "SemesterInfo.txt");
 	fout << se.name << endl << se.start_date << endl << se.end_date;
 	fout.close();
@@ -30,7 +33,7 @@ void updateCourseList(Course* CourseList, int numOfCourse, string filename)
 	fout.close();
 }
 
-void updateCourseToFile(Course co, string filename)
+void updateCourseToFile(Course &co, string filename)
 {
 	ofstream fout(filename);
 	fout << co.Name << endl;
@@ -51,7 +54,8 @@ void updateClassList(Class* ClassList, int numClass, string filename)
 	fout << numClass << endl;
 	for (int i = 0; i < numClass; ++i) {
 		fout << ClassList[i].Name << endl;
-		//updateStudentsInClass("../ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv");
+		updateStudentToFile(ClassList[i].stHead, "..data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv");
+		updateStudentsCoursesAttending(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/CourseAttending/");
 	}
 	fout.close();
 }
@@ -67,12 +71,32 @@ void updateStudentToFile(Node<Student>* pHead, string filename) {
 		fout << pCur->data.DOB << "," << pCur->data.SocialID << "," << pCur->data.Password << endl;
 		pCur = pCur->next;
 	}
-	cout << "Update Student to File successfully" << endl;
+	//cout << "Update Student to File successfully ";
 	fout.close();
 }
 
-void updateStaffToFile(Node<User>* pHead, string filename) {
+void updateStudentsCoursesAttending(Node<Student> *stHead, string filename)
+{
+	Node<Student> *pCur = stHead;
+	while (pCur) {
+		updateStudentCourses(pCur, filename + pCur->data.StID + ".txt");
+		pCur = pCur->next;
+	}
+}
+
+void updateStudentCourses(Node<Student> *student, string filename)
+{
 	ofstream fout(filename);
+	fout << student->data.numOfCoursesAttending << endl;
+	for (int i = 0; i < student->data.numOfCoursesAttending; ++i) {
+		fout << student->data.courseID[i] << endl;
+		fout << student->data.courseName[i] << endl;
+	}
+	fout.close();
+}
+
+void updateStaffToFile(Node<User>* pHead) {
+	ofstream fout("../data/StaffList.csv");
 	fout << "Full name,DOB,Gender,Username,Password,Email\n";
 	Node<User>* pCur = pHead;
 	while (pCur) {
@@ -81,7 +105,7 @@ void updateStaffToFile(Node<User>* pHead, string filename) {
 		fout << pCur->data.Username << "," << pCur->data.Password << "," << pCur->data.Email << endl;
 		pCur = pCur->next;
 	}
-	cout << "Update Staff to File succesfully" << endl;
+	//cout << "Update Staff to File succesfully" << endl;
 	fout.close();
 }
 

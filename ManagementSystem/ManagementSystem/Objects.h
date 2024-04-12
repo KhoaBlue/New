@@ -25,7 +25,7 @@ struct Object {
 		sprite.setPosition(x, y);
 	}
 	
-	void drawTo(sf::RenderWindow &window) {
+	void drawTo(sf::RenderWindow &window) const {
 		if(!isHiden)
 			window.draw(sprite);
 	}
@@ -73,14 +73,14 @@ struct Button : Object {
 		text.setFillColor(color);
 	}
 
-	void drawTo(sf::RenderWindow &window) {
+	void drawTo(sf::RenderWindow &window) const {
 		if (!isHiden) {
 			window.draw(sprite);
 			window.draw(text);
 		}
 	}
 
-	bool isMouseOver(sf::RenderWindow &window) {
+	bool isMouseOver(sf::RenderWindow &window) const {
 		int mouseX = sf::Mouse::getPosition(window).x;
 		int mouseY = sf::Mouse::getPosition(window).y;
 
@@ -209,7 +209,7 @@ struct TextBox : Object {
 		}
 	}
 
-	bool isMouseOver(sf::RenderWindow &window) {
+	bool isMouseOver(sf::RenderWindow &window) const {
 		int MouseX = sf::Mouse::getPosition(window).x;
 		int MouseY = sf::Mouse::getPosition(window).y;
 		float PosX = sprite.getPosition().x;
@@ -221,7 +221,7 @@ struct TextBox : Object {
 		return true;
 	}
 
-	bool getState() {
+	bool getState() const {
 		return isSelected;
 	}
 	//void moveCursor();

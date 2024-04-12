@@ -33,7 +33,7 @@ struct User {
     string Username;
     string Password;
     string Fullname;
-    bool Gender; //true: male, false: female
+    bool Gender = true; //true: male, false: female
     string DOB;
     string Email;
 };
@@ -47,7 +47,7 @@ struct Student : User
     string SocialID;
     string *courseID = new string[7];
     string *courseName = new string[7];
-    int numOfCoursesAttending;
+    int numOfCoursesAttending = 0;
     Mark *Result = new Mark[7];
     void setResult(string CourseID, Mark res) {
         for (int i = 0; i < numOfCoursesAttending; ++i) {
@@ -92,33 +92,37 @@ struct Semester {
 
 struct SchoolYear {
     string Name;
+    int NumOfClasses = 50;
     string start_date;
     string end_date;
     int numOfSemesters = 0;
-    Semester* SemestersList;
-    int NumOfClasses = 50;
-    Class* ClassesList;
+    Class* ClassesList = nullptr;
+    Semester* SemestersList = nullptr;
 };
 
 //functions for loading data from file
 SchoolYear *loadSchoolYearList(SchoolYear *&SyList, int &numSY);
 bool loadSemesterFromFile(Semester &se, string filename);
-void loadCourseList(Course *&CourseList, int &numOfCourse, string filename);
-void loadCourseInfoFromFile(Course &co, string filename);
-void loadClassList(Class *&ClassList, int &numClass, string filename);
-void loadCourseStudents(Course &co, string filename);
-void loadStudentFromFile(Node<Student>*& pHead, string filename);
-void loadStudentCoursesInfo(Student *st, string filename);
-void loadStaffFromFile(Node<User>*& pHead);
+bool loadCourseList(Course *&CourseList, int &numOfCourse, string filename);
+bool loadCourseInfoFromFile(Course &co, string filename);
+bool loadClassList(Class *&ClassList, int &numClass, string filename);
+bool loadCourseStudents(Course &co, string filename);
+bool loadStudentFromFile(Node<Student>*& pHead, string filename);
+bool loadStudentsCoursesAttending(Node <Student> *stHead, string filename);
+bool loadStudentCourses(Node<Student> *student, string filename);
+bool loadStaffFromFile(Node<User>*& pHead);
 
 //functions for updating data to file
 void updateSchoolYearList(SchoolYear *SyList, int numSY);
-void updateSemesterToFile(Semester se, string filename);
+void updateSemesterToFile(Semester &se, string filename);
 void updateCourseList(Course *CourseList, int numOfCourse, string filename);
-void updateCourseToFile(Course co, string filename);
+void updateCourseToFile(Course &co, string filename);
 void updateClassList(Class *ClassList, int numClass, string filename);
 void updateStudentToFile(Node<Student> *pHead, string filename);
+void updateStudentsCoursesAttending(Node <Student> *stHead, string filename);
+void updateStudentCourses(Node<Student> *student, string filename);
 void updateStaffToFile(Node<User> *pHead);
+
 void updateCourseInfo(Course& course, int option);
 
 //functions for deleting data:

@@ -249,12 +249,18 @@ void addStudentToCourse(SchoolYear& currentSchoolYear)
 
 void addNewClasses(Class*& NewClasses, int& numOfClass)
 {
-    cout << "Please input the file name: ";
+    cin.ignore();
     string filename;
-    getline(cin, filename);
     for (int i = 0; i < numOfClass; ++i) {
+        cout << "Please input the file name: ";
+        getline(cin, filename);
+        cout << "Class name: ";
         cin >> NewClasses[i].Name;
-        //readStudentsList(NewClasses[i].stHead, filename);
+        if (!loadStudentFromFile(NewClasses[i].stHead, filename)) {
+            cout << "Cannot load student from " << filename << endl;
+            return;
+        }
+        cin.ignore();
     }
 }
 
@@ -288,17 +294,17 @@ void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses)
 }
 
 void createSchoolYear(SchoolYear*& SyList, int& numSY) {
-    SchoolYear newSY;
-    initSchoolYear(newSY, SyList[numSY - 1].ClassesList, SyList[numSY - 1].NumOfClasses);
     SchoolYear* newSchoolYearList = new SchoolYear[numSY + 1];
+    initSchoolYear(SyList[0], SyList[numSY - 1].ClassesList, SyList[numSY - 1].NumOfClasses);
+    if (numSY == 0) return;
     for (int i = 0; i < numSY; ++i) {
-        newSchoolYearList[i] = SyList[i];
+        newSchoolYearList[i + 1] = SyList[i];
     }
-    newSchoolYearList[numSY] = newSY;
     delete[] SyList;
     SyList = newSchoolYearList;
-    numSY++;
-    updateSchoolYearList(SyList, numSY);
+    ++numSY;
+
+    //updateSchoolYearList(SyList, numSY);
 }
 
 void initSemester(Semester& sem) {
