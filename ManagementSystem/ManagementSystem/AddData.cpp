@@ -293,7 +293,8 @@ void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses)
     //}
 }
 
-void createSchoolYear(SchoolYear*& SyList, int& numSY) {
+void createSchoolYear(SchoolYear*& SyList, int& numSY, string name, Class *NewClasses, int numOfNewClasses) {
+    
     SchoolYear* newSchoolYearList = new SchoolYear[numSY + 1];
     initSchoolYear(SyList[0], SyList[numSY - 1].ClassesList, SyList[numSY - 1].NumOfClasses);
     if (numSY == 0) return;

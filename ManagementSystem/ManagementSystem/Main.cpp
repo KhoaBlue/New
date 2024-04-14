@@ -1,5 +1,6 @@
 #include "Function.h"
 #include "Menu.h"
+#include <stack>
 
 using namespace std;
 #define Login 0
@@ -8,9 +9,12 @@ using namespace std;
 
 
 //Student section: define from 10 - 19
-#define StudentMainMenu 10
+#define StudentMain 10
 #define StudentProfile 11
-
+#define StudentCourse 12
+#define StudentResult 13
+#define StudentProfile 14
+#define StudentChangePass 15
 
 
 #define StaffMainMenu 3		
@@ -37,46 +41,19 @@ int main() {
 
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Student Management System", sf::Style::Close);
 	window.setFramerateLimit(60);
+	int nextPage;
 	int currentPage = Login;	
-	LoginMenu loginMenu;
-	ForgotPassMenu forgotPassMenu;
+	stack<int> pageStack;
+	LoginMenu *loginMenu = new LoginMenu;
+	ForgotPassMenu *forgotPassMenu = new ForgotPassMenu;
+	StudentMainMenu *studentMainMenu = new StudentMainMenu;
 	while (window.isOpen()) {
 		sf::Event ev;
 		window.clear(sf::Color::White);
 		switch (currentPage) {
 			case Login:
-				while (window.pollEvent(ev)) {
-					if (ev.type == sf::Event::Closed) {
-						window.close();
-					}
-					if (ev.type == sf::Event::MouseButtonPressed) {
-						if (loginMenu.butLogIn.isMouseOver(window)) {
-							string username = loginMenu.tbUsername.text.str();
-							string password = loginMenu.tbPassword.text.str();
-							if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
-								currentPage = StudentMainMenu;
-								cout << "Login succeeded" << endl;
-							}
-							else {
-								cout << "Login Failed" << endl;
-							}
-							cout << currentPage << endl;
-						}
-						if (loginMenu.butForgotPW.isMouseOver(window)) {
-							loginMenu.tbUsername.clearText();
-							loginMenu.tbPassword.clearText();
-							string username = loginMenu.tbUsername.text.str();
-							string password = loginMenu.tbPassword.text.str();
-							cout << username << " " << password << endl;
-							currentPage = ForgotPass;	
-						}
-						loginMenu.handleClicking(window);
-					}
-					if (ev.type == sf::Event::TextEntered) {
-						loginMenu.handleTyping(window, ev);
-					}
-				}
-				loginMenu.drawTo(window);
+				loginMenu->EventHandling(window, ev, studentMainMenu, isStaff, pUser, pStudent, currentSchoolYear, StaffHead, currentPage);
+				loginMenu->drawTo(window);
 				break;
 			case ForgotPass:
 				while (window.pollEvent(ev)) {
@@ -84,25 +61,50 @@ int main() {
 						window.close();
 					}
 					if (ev.type == sf::Event::MouseButtonPressed) {
-						if (forgotPassMenu.butBack.isMouseOver(window)) {
-							forgotPassMenu.tbUsername.clearText();
-							forgotPassMenu.tbEmail.clearText();
-							forgotPassMenu.tbNewPass.clearText();
+						if (forgotPassMenu->butBack.isMouseOver(window)) {
+							forgotPassMenu->tbUsername.clearText();
+							forgotPassMenu->tbEmail.clearText();
+							forgotPassMenu->tbNewPass.clearText();
 							currentPage = Login;
 						}
-						if (forgotPassMenu.butConfirm.isMouseOver(window)) {
+						if (forgotPassMenu->butConfirm.isMouseOver(window)) {
 							//Check and change Password.
 						}
-						forgotPassMenu.handleClicking(window);
+						forgotPassMenu->handleClicking(window);
 					}
 					if (ev.type == sf::Event::TextEntered) {
-						forgotPassMenu.handleTyping(window, ev);
+						forgotPassMenu->handleTyping(window, ev);
 					}
 				}
-				forgotPassMenu.drawTo(window);
+				forgotPassMenu->drawTo(window);
 				break;	
-			case StudentMainMenu:
-				while(window.pollEvent(ev)) {
+			case StudentMain:
+				studentMainMenu->EventHandling(window, ev, currentPage, pageStack);
+				studentMainMenu->drawTo(window);
+				break;
+			case StudentCourse:
+				while (window.pollEvent(ev)) {
+					if (ev.type == sf::Event::Closed) {
+						window.close();
+					}
+				}
+				break;
+			case StudentResult:
+				while (window.pollEvent(ev)) {
+					if (ev.type == sf::Event::Closed) {
+						window.close();
+					}
+				}
+				break;
+			case StudentProfile:
+				while (window.pollEvent(ev)) {
+					if (ev.type == sf::Event::Closed) {
+						window.close();
+					}
+				}
+				break;
+			case StudentChangePass:
+				while (window.pollEvent(ev)) {
 					if (ev.type == sf::Event::Closed) {
 						window.close();
 					}
@@ -113,5 +115,8 @@ int main() {
 	}
 	deleteStaffList(StaffHead);
 	deleteSchoolYearList(SyList, numSY);
+	delete loginMenu;
+	delete studentMainMenu;
+	delete forgotPassMenu;
 	return 0;
 }

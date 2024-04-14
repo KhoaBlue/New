@@ -1,7 +1,0 @@
-3
-
-CS162
-Introduction to Computer Science II
-MTH252
-Calculus II
-CM102

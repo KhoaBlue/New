@@ -149,6 +149,11 @@ bool loadClassList(Class*& ClassList, int& numClass, string filename)
 		if (!loadStudentFromFile(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv")) {
 			return false;
 		}
+		Node<Student> *pCur = ClassList[i].stHead;
+		while (pCur) {
+			pCur->data.Class = ClassList[i].Name;
+			pCur = pCur->next;
+		}
 		if (!loadStudentsCoursesAttending(ClassList[i].stHead,"../data/ClassesStudents/" + ClassList[i].Name + "/CourseAttending/")) {
 			return false;
 		}
