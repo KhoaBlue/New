@@ -1,4 +1,5 @@
 #include "Function.h"
+#include "Windows.h"
 
 void updateSchoolYearList(SchoolYear* SyList, int numSY)
 {
@@ -669,4 +670,17 @@ void updateCourseInfo(Course& course, int option) {
             break;
         }
     }
+}
+
+bool createFolder(const string &folderName, const string &pathName) {
+	wstring fullPath = wstring(pathName.begin(), pathName.end()) + L"\\" + wstring(folderName.begin(), folderName.end());
+
+	if (!CreateDirectory(fullPath.c_str(), NULL) && GetLastError() != ERROR_ALREADY_EXISTS) {
+		cerr << "Failed to create directory: "  << GetLastError() << endl;
+		wcout << fullPath << endl;
+		return false;
+	}
+
+	wcout << L"Directory created successfully: " << fullPath << endl;
+	return true;
 }

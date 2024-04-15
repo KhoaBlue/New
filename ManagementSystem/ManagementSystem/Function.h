@@ -45,10 +45,10 @@ struct Student : User
     string LastName;
     string Class;
     string SocialID;
-    string *courseID = new string[7];
-    string *courseName = new string[7];
+    string *courseID = new string[8];
+    string *courseName = new string[8];
     int numOfCoursesAttending = 0;
-    Mark *Result = new Mark[7];
+    Mark *Result = new Mark[8];
     void setResult(string CourseID, Mark res) {
         for (int i = 0; i < numOfCoursesAttending; ++i) {
             if (courseID[i] == CourseID) {
@@ -75,7 +75,7 @@ struct Course {
 };
 
 struct Class {
-    string Name;
+    string Name = "";
     Node<Student>* stHead = nullptr;
 };
 
@@ -139,12 +139,11 @@ void removeStudentFromCourse(SchoolYear* SyList, Semester* SemestersList, Course
 void outputStaffList(Node<User> *StaffHead);
 void outputStudent(Student x);
 void outputStudentList(Node<Student> *StudentHead);
-
 void displayClassesList(Node <Class>*& pHead, string Name, int& n);
 void addNewClasses(Class*& NewClasses, int& numOfClass);
 void addClasses(SchoolYear& sy, Class* OldClasses, int NumOldClasses);
-void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses);
-void createSchoolYear(SchoolYear*& SyList, int& numSY);
+void initSchoolYear(SchoolYear *sy, const SchoolYear &oldSY, Class *NewClasses, int numOfNewClasses);
+bool createSchoolYear(SchoolYear *&SyList, int &numSY, string name, Class *NewClasses, int numOfNewClasses, SchoolYear *&currentSchoolYear);
 
 void initData(SchoolYear& currentSchoolYear);
 void addCourse(SchoolYear& schoolYear);
@@ -178,3 +177,5 @@ void viewScoreboardOfClass(Class clazz, Semester semester);
 void viewScoreboardOfStudent(Student student, Semester semester);
 void importScoreboardOfCourse(string pathFile, Semester semester);
 void changePassword(Node<Student>*& pStudent, Node<User>* StaffHead, SchoolYear currentSchoolYear);
+
+bool createFolder(const std::string &folderName, const std::string &pathName);

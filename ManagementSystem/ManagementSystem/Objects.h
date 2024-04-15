@@ -99,8 +99,6 @@ struct TextBox : Object {
 	int limit = 21;
 	bool isSelected = false;
 	bool hasLimit = true;
-	
-
 	//Constructors
 	//TextBox(std::string filename, bool sel, float x, float y, int charSize) : Object(filename, x, y) {
 	//	font.loadFromFile("../ManagementSystem/Poppins/Poppins-SemiBold.ttf");
@@ -117,9 +115,8 @@ struct TextBox : Object {
 	//	hasLimit = true;
 	//	limit = 32;
 	//}
-
 	//Functions
-	
+
 	void loadTexture(std::string filename, bool sel, float x, float y, int charSize) {
 		texture.loadFromFile(filename);
 		sprite.setTexture(texture);
@@ -138,8 +135,8 @@ struct TextBox : Object {
 	}
 
 	void clearText() {
-		text.str() = "";
-		textbox.setString(text.str());
+		text.str("");
+		textbox.setString("");
 		setSelected(false);
 	}
 	void setFont(sf::Font &font) {

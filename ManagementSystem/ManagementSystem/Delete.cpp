@@ -25,6 +25,7 @@ void deleteStudentList(Node<Student>* pHead)
 
 void deleteClassList(Class* ClassList, int numOfClasses)
 {
+	if (ClassList == nullptr) return;
 	for (int i = 0; i < numOfClasses; ++i) {
 		deleteStudentList(ClassList[i].stHead);
 	}
@@ -33,6 +34,7 @@ void deleteClassList(Class* ClassList, int numOfClasses)
 
 void deleteSemesterList(Semester* SemesterList, int numOfSemester)
 {
+	if (SemesterList == nullptr) return;
 	for (int i = 0; i < numOfSemester; ++i) {
 		deleteCourseList(SemesterList[i].CoursesList, SemesterList[i].numOfCourses);
 	}
@@ -40,6 +42,7 @@ void deleteSemesterList(Semester* SemesterList, int numOfSemester)
 }
 
 void deleteSchoolYearList(SchoolYear* SyList, int numOfSchoolYears) {
+	if (SyList == nullptr) return;
 	for (int i = 0; i < numOfSchoolYears; ++i) {
 		deleteClassList(SyList[i].ClassesList, SyList[i].NumOfClasses);
 		deleteSemesterList(SyList[i].SemestersList, SyList[i].numOfSemesters);
@@ -49,6 +52,7 @@ void deleteSchoolYearList(SchoolYear* SyList, int numOfSchoolYears) {
 
 void deleteCourseList(Course* CourseList, int numOfCourses)
 {
+	if (CourseList == nullptr) return;
 	for (int i = 0; i < numOfCourses; ++i) {
 		deleteStudentList(CourseList[i].stHead);
 	}

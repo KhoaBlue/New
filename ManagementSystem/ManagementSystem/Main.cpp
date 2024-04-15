@@ -10,11 +10,10 @@ using namespace std;
 
 //Student section: define from 10 - 19
 #define StudentMain 10
-#define StudentProfile 11
-#define StudentCourse 12
-#define StudentResult 13
-#define StudentProfile 14
-#define StudentChangePass 15
+#define StudentCourse 11
+#define StudentResult 12
+#define StudentProfile 13
+#define StudentChangePass 14
 
 
 #define StaffMainMenu 3		
@@ -35,13 +34,9 @@ int main() {
 	Node<User> *pUser = nullptr;
 	loadStaffFromFile(StaffHead);
 	SchoolYear *currentSchoolYear = loadSchoolYearList(SyList, numSY);
-	
-	updateSchoolYearList(SyList, numSY);
-	updateStaffToFile(StaffHead);
 
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Student Management System", sf::Style::Close);
 	window.setFramerateLimit(60);
-	int nextPage;
 	int currentPage = Login;	
 	stack<int> pageStack;
 	LoginMenu *loginMenu = new LoginMenu;
@@ -113,10 +108,13 @@ int main() {
 		}
 		window.display();		
 	}
+	 
+	updateSchoolYearList(SyList, numSY);
+	updateStaffToFile(StaffHead);
 	deleteStaffList(StaffHead);
 	deleteSchoolYearList(SyList, numSY);
-	delete loginMenu;
-	delete studentMainMenu;
-	delete forgotPassMenu;
+	//delete loginMenu;
+	//delete studentMainMenu;
+	//delete forgotPassMenu;
 	return 0;
 }

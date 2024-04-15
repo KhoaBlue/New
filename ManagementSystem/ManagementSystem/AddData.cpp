@@ -110,7 +110,6 @@ void addCourse(SchoolYear& schoolYear) {
 
 void addStudentToCourse(SchoolYear& currentSchoolYear)
 {
-
     // Input student ID
     string studentID;
     cout << "Enter student ID: ";
@@ -247,65 +246,97 @@ void addStudentToCourse(SchoolYear& currentSchoolYear)
     cout << "Add student to course successfully" << endl;
 }
 
-void addNewClasses(Class*& NewClasses, int& numOfClass)
-{
-    cin.ignore();
-    string filename;
-    for (int i = 0; i < numOfClass; ++i) {
-        cout << "Please input the file name: ";
-        getline(cin, filename);
-        cout << "Class name: ";
-        cin >> NewClasses[i].Name;
-        if (!loadStudentFromFile(NewClasses[i].stHead, filename)) {
-            cout << "Cannot load student from " << filename << endl;
-            return;
+bool copyCLassList(const Class *source, int numOfSources, Class *des) {
+    for (int i = 0; i < numOfSources; ++i) {
+        des[i].Name = source[i].Name;
+        Node<Student> *cur = nullptr;
+        Node<Student> *sourceCur = source[i].stHead;
+        while (sourceCur) {
+            if (cur == nullptr) {
+                cur = new Node<Student>;
+                cur->next = nullptr;
+                cur->data = sourceCur->data;
+                cur->data.courseID = new string[8];
+                cur->data.courseName = new string[8];
+                cur->data.Result = new Mark[8];
+                for (int j = 0; j < cur->data.numOfCoursesAttending; ++j) {
+                    cur->data.courseID[j] = sourceCur->data.courseID[j];
+                    cur->data.courseName[j] = sourceCur->data.courseName[j];
+                    cur->data.Result[j] = sourceCur->data.Result[j];
+                }
+                des[i].stHead = cur;
+            }
+            else {
+                cur->next = new Node<Student>;
+                cur = cur->next;
+                cur->data = sourceCur->data;
+                cur->next = nullptr;
+                cur->data.courseID = new string[8];
+                cur->data.courseName = new string[8];
+                cur->data.Result = new Mark[8];
+                for (int j = 0; j < cur->data.numOfCoursesAttending; ++j) {
+                    cur->data.courseID[j] = sourceCur->data.courseID[j];
+                    cur->data.courseName[j] = sourceCur->data.courseName[j];
+                    cur->data.Result[j] = sourceCur->data.Result[j];
+                }
+            }
+            sourceCur = sourceCur->next;
         }
-        cin.ignore();
     }
+    return true;
 }
 
-void addClasses(SchoolYear& sy, Class* OldClasses, int NumOldClasses)
+void initSchoolYear(SchoolYear *sy, const SchoolYear &oldSY, Class *NewClasses, int numOfNewClasses)
 {
-    int NumNewClasses;
-    cout << "Please input the number of new Classes";
-    cin >> NumNewClasses;
-    sy.NumOfClasses = NumNewClasses + NumOldClasses;
-    sy.ClassesList = new Class[sy.NumOfClasses];
+    createFolder(sy->Name, "../data/SchoolYears");
+    createFolder("Semester 1", "../data/SchoolYears/" + sy->Name);
+    createFolder("Semester 2", "../data/SchoolYears/" + sy->Name);
+    createFolder("Semester 3", "../data/SchoolYears/" + sy->Name);
+    createFolder("CoursesInfo", "../data/SchoolYears/" + sy->Name + "/Semester 1");
+    createFolder("CoursesInfo", "../data/SchoolYears/" + sy->Name + "/Semester 2");
+    createFolder("CoursesInfo", "../data/SchoolYears/" + sy->Name + "/Semester 3");
+    createFolder("CoursesStudents", "../data/SchoolYears/" + sy->Name + "/Semester 1");
+    createFolder("CoursesStudents", "../data/SchoolYears/" + sy->Name + "/Semester 2");
+    createFolder("CoursesStudents", "../data/SchoolYears/" + sy->Name + "/Semester 3");
 
-    addNewClasses(sy.ClassesList, NumNewClasses);
-    for (int i = 0; i < NumOldClasses; ++i) {
-        sy.ClassesList[i + NumNewClasses] = OldClasses[i];
+    sy->SemestersList = new Semester[3];
+    sy->numOfSemesters = 0;
+
+    int numOfOldClasses = oldSY.NumOfClasses;
+    sy->NumOfClasses = numOfNewClasses + numOfOldClasses;
+    sy->ClassesList = new Class[sy->NumOfClasses];
+    copyCLassList(oldSY.ClassesList, numOfOldClasses, sy->ClassesList);
+    cout << numOfOldClasses << endl;
+    for (int i = 0; i < numOfNewClasses; ++i) {
+        sy->ClassesList[i + numOfOldClasses] = NewClasses[i];
     }
+    delete[] NewClasses;
 }
 
-void initSchoolYear(SchoolYear& sy, Class* OldClasses, int NumOldClasses)
-{
-    cout << "Input Name of School Year: ";
-    getline(cin, sy.Name);
-    cout << "Input Start date: ";
-    getline(cin, sy.start_date);
-    cout << "Input End date: ";
-    getline(cin, sy.end_date);
-    addClasses(sy, OldClasses, NumOldClasses);
-    sy.SemestersList = new Semester[3];
-    //for (int i = 0; i < 3; ++i) {
-    //    sy.SemestersList[i].CoursesList = new Course[100];
-    //}
-}
-
-void createSchoolYear(SchoolYear*& SyList, int& numSY, string name, Class *NewClasses, int numOfNewClasses) {
-    
-    SchoolYear* newSchoolYearList = new SchoolYear[numSY + 1];
-    initSchoolYear(SyList[0], SyList[numSY - 1].ClassesList, SyList[numSY - 1].NumOfClasses);
-    if (numSY == 0) return;
+bool createSchoolYear(SchoolYear *&SyList, int &numSY, string name, Class *NewClasses, int numOfNewClasses, SchoolYear *&currentSchoolYear) {
+    if (SyList == nullptr || numSY == 0) {
+        numSY++;
+        SyList = new SchoolYear[1];
+        SyList->Name = name;
+        SyList->ClassesList = NewClasses;
+        SyList->NumOfClasses = numOfNewClasses;
+        currentSchoolYear = SyList;
+        return true;
+    }
     for (int i = 0; i < numSY; ++i) {
-        newSchoolYearList[i + 1] = SyList[i];
+        if (SyList[i].Name == name) return false;
+    }
+    SchoolYear *newSchoolYearList = new SchoolYear[numSY + 1];
+    newSchoolYearList[numSY].Name = name;
+    initSchoolYear(newSchoolYearList + numSY, SyList[numSY - 1], NewClasses, numOfNewClasses);
+    for (int i = 0; i < numSY; ++i) {
+        newSchoolYearList[i] = SyList[i];
     }
     delete[] SyList;
     SyList = newSchoolYearList;
     ++numSY;
-
-    //updateSchoolYearList(SyList, numSY);
+    currentSchoolYear = SyList + numSY - 1;
+    return true;
 }
 
 void initSemester(Semester& sem) {

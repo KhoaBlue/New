@@ -9,9 +9,16 @@ SchoolYear* loadSchoolYearList(SchoolYear*& SyList, int& numSY)
 		return nullptr;
 	}
 	fin >> numSY;
-	SyList = new SchoolYear[numSY];
+	if(numSY > 0)
+		SyList = new SchoolYear[numSY];
+	else {
+		SyList = nullptr;
+		numSY = 0;
+		return nullptr;
+	}
 	for (int i = 0; i < numSY; ++i) {
-		fin >> SyList[i].Name;
+		fin.ignore();
+		getline(fin, SyList[i].Name);
 		fin >> SyList[i].numOfSemesters;
 		loadClassList(SyList[i].ClassesList, SyList[i].NumOfClasses, "../data/SchoolYears/" + SyList[i].Name + "/ClassesList.txt");
 		SyList[i].SemestersList = new Semester[3];
@@ -22,7 +29,7 @@ SchoolYear* loadSchoolYearList(SchoolYear*& SyList, int& numSY)
 		}
 	}
 	fin.close();
-	return SyList;
+	return SyList + numSY - 1;
 }
 
 bool loadSemesterFromFile(Semester& se, string filename) {
@@ -139,24 +146,22 @@ bool loadClassList(Class*& ClassList, int& numClass, string filename)
 {
 	ifstream fin(filename);
 	if (!fin) {
-		cout << "Cannot loadClassList!";
+		cout << "Cannot loadClassList!: " << filename << endl;;
 		return false;
 	}
 	fin >> numClass;
-	ClassList = new Class[numClass];
+	if (ClassList == nullptr)
+		ClassList = new Class[numClass];
+	fin.ignore();
 	for (int i = 0; i < numClass; ++i) {
-		fin >> ClassList[i].Name;
-		if (!loadStudentFromFile(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv")) {
-			return false;
-		}
+		getline(fin, ClassList[i].Name);
+		loadStudentFromFile(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/" + ClassList[i].Name + ".csv");
 		Node<Student> *pCur = ClassList[i].stHead;
 		while (pCur) {
 			pCur->data.Class = ClassList[i].Name;
 			pCur = pCur->next;
 		}
-		if (!loadStudentsCoursesAttending(ClassList[i].stHead,"../data/ClassesStudents/" + ClassList[i].Name + "/CourseAttending/")) {
-			return false;
-		}
+		loadStudentsCoursesAttending(ClassList[i].stHead, "../data/ClassesStudents/" + ClassList[i].Name + "/CourseAttending/");
 	}
 	fin.close();
 	return true;
@@ -167,6 +172,7 @@ bool loadStudentFromFile(Node<Student>*& pHead,  string filename) {
 	fin.open(filename);
 	if (!fin) {
 		cout << "Cannot open file " << filename << endl;
+		pHead = nullptr;
 		return false;
 	}
 	Node<Student>* pCur = nullptr;

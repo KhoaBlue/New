@@ -1,14 +1,12 @@
 #include "Menu.h"
-#include "Function.h"
 
 #define Login 0
 #define ForgotPass 1
 #define StudentMain 10
-#define StudentProfile 11
-#define StudentCourse 12
-#define StudentResult 13
-#define StudentProfile 14
-#define StudentChangePass 15
+#define StudentCourse 11
+#define StudentResult 12
+#define StudentProfile 13
+#define StudentChangePass 14
 
 
 void setTextMiddle(sf::Text *txt, float x, float y, float width, float height)
@@ -78,9 +76,12 @@ void LoginMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, StudentMa
 				string username = tbUsername.text.str();
 				string password = tbPassword.text.str();
 				if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
-					if(!isStaff)
+					if (!isStaff) {
 						currentPage = StudentMain;
-					studentMainMenu->setUp(&pStudent->data, currentSchoolYear);
+						studentMainMenu->setUp(&pStudent->data, currentSchoolYear);
+					}
+					tbUsername.clearText();
+					tbPassword.clearText();
 					cout << "Login succeeded" << endl;
 				}
 				else {
