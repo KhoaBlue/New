@@ -113,8 +113,8 @@ int main() {
 	updateStaffToFile(StaffHead);
 	deleteStaffList(StaffHead);
 	deleteSchoolYearList(SyList, numSY);
-	//delete loginMenu;
-	//delete studentMainMenu;
-	//delete forgotPassMenu;
+	delete loginMenu;
+	delete studentMainMenu;
+	delete forgotPassMenu;
 	return 0;
 }
