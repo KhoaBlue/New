@@ -40,7 +40,7 @@ struct LoginMenu {
 	void handleClicking(sf::RenderWindow &window);
 	void handleTyping(sf::RenderWindow &window, sf::Event ev);
 
-	void EventHandling(sf::RenderWindow &window, sf::Event &ev, StudentMainMenu *studentMainMenu, bool &isStaff, Node<User> *pUser, Node<Student> *pStudent, SchoolYear *currentSchoolYear, Node<User> *StaffHead, int &currentPage);
+	void EventHandling(sf::RenderWindow &window, sf::Event &ev, bool &isStaff, Node<User> *pUser, Node<Student> *&pStudent, SchoolYear *currentSchoolYear, Node<User> *StaffHead, int &currentPage);
 };
 
 struct ForgotPassMenu {
@@ -78,29 +78,30 @@ struct ForgotPassMenu {
 struct StudentMainMenu {
 	Student *pStudent = nullptr;
 	SchoolYear *pSchoolYear = nullptr;
+	//Header:
 	Object oHeader;
 	Object oLogo;
 	Object oNameRect;
-	Object oPromting;
-	Object oInfoRect;
-	sf::Text tName;
-	sf::Text tSchoolYearName;
-	sf::Text tSemester;
-	sf::Text tClass;
-	sf::Text tCoursesAttending;
-	sf::Font font;
 	Button butBackButton;
-	Button butBackButtonClicked;
-	Button butNextButton;
-	Button butNextButtonClicked;
+	//Button butBackButtonClicked;
+	Button butHome;
 	Button butDrop;
 	Button butDrop2;
 	Button butMyProfile;
 	Button butChangePass;
 	Button butLogOut;
-	Button butMyCourses;
+	sf::Text tName;
+	//Main:
+	Object oPromting;
+	Object oInfoRect;
+	sf::Text tSchoolYearName;
+	sf::Text tSemester;
+	sf::Text tClass;
+	sf::Text tCoursesAttending;
+	sf::Font font;
 	Button butMyResult;
-	Button butHome;
+	Button butMyCourses;
+
 	void setUp(Student *student, SchoolYear *schoolyear) {
 		font.loadFromFile("../ManagementSystem/Poppins/Poppins-ExtraBold.ttf");
 		pStudent = student;
@@ -135,36 +136,115 @@ struct StudentMainMenu {
 
 	}
 	StudentMainMenu() {
-		oHeader.loadTexture("../ManagementSystem/Texture/Student Main Menu/Header Rect.png", 0.0f, 0.0f);
-		oLogo.loadTexture("../ManagementSystem/Texture/Student Main Menu/Fit.png", 530.0f, 6.0f);
-		oNameRect.loadTexture("../ManagementSystem/Texture/Student Main Menu/Name Rect.png", 1024.0f, 18.0f);
+		//Header:
+		oHeader.loadTexture("../ManagementSystem/Texture/Header/Header Rect.png", 0.0f, 0.0f);
+		oLogo.loadTexture("../ManagementSystem/Texture/Header/Fit.png", 530.0f, 6.0f);
+		oNameRect.loadTexture("../ManagementSystem/Texture/Header/Name Rect.png", 1024.0f, 18.0f);
+		butDrop.loadTexture("../ManagementSystem/Texture/Header/DropButton.png", 1217.0f, 29.0f);
+		butDrop2.loadTexture("../ManagementSystem/Texture/Header/DropButton2.png", 1217.0f, 29.0f);
+		butDrop2.hide();
+		butMyProfile.loadTexture("../ManagementSystem/Texture/Header/My Profile.png", 1024.0f, 100.0f);
+		butMyProfile.hide();
+		butChangePass.loadTexture("../ManagementSystem/Texture/Header/Change Password.png", 1024.0f, 153.0f);
+		butChangePass.hide();
+		butLogOut.loadTexture("../ManagementSystem/Texture/Header/Logout.png", 1024.0f, 207.0f);
+		butLogOut.hide();
+		butBackButton.loadTexture("../ManagementSystem/Texture/Header/Back Button.png", 23.0f, 28.0f);
+		//butBackButtonClicked.loadTexture("../ManagementSystem/Texture/Student Main Menu/BackButtonClicked.png", 26.0f, 32.0f);
+		//butBackButtonClicked.hide();
+		butHome.loadTexture("../ManagementSystem/Texture/Header/Home Button.png", 186.0f, 28.0f);
+		//Main:
 		oPromting.loadTexture("../ManagementSystem/Texture/Student Main Menu/Prompting.png", 411.0f, 172.0f);
 		oInfoRect.loadTexture("../ManagementSystem/Texture/Student Main Menu/InfoRect.png", 22.0f, 128.0f);
-		butBackButton.loadTexture("../ManagementSystem/Texture/Student Main Menu/BackButton.png", 26.0f, 32.0f);
-		butBackButtonClicked.loadTexture("../ManagementSystem/Texture/Student Main Menu/BackButtonClicked.png", 26.0f, 32.0f);
-		butBackButtonClicked.hide();
-		butNextButton.loadTexture("../ManagementSystem/Texture/Student Main Menu/NextButton.png", 70.0f, 32.0f);
-		butNextButtonClicked.loadTexture("../ManagementSystem/Texture/Student Main Menu/NextButtonClicked.png", 70.0f, 32.0f);
-		butNextButtonClicked.hide();
-		butDrop.loadTexture("../ManagementSystem/Texture/Student Main Menu/DropButton.png", 1217.0f, 29.0f);
-		butDrop2.loadTexture("../ManagementSystem/Texture/Student Main Menu/DropButton2.png", 1217.0f, 29.0f);
-		butDrop2.hide();
-		butMyProfile.loadTexture("../ManagementSystem/Texture/Student Main Menu/My Profile.png", 1024.0f, 100.0f);
-		butMyProfile.hide();
-		butChangePass.loadTexture("../ManagementSystem/Texture/Student Main Menu/Change Password.png", 1024.0f, 153.0f);
-		butChangePass.hide();
-		butLogOut.loadTexture("../ManagementSystem/Texture/Student Main Menu/Logout.png", 1024.0f, 207.0f);
-		butLogOut.hide();
 		butMyCourses.loadTexture("../ManagementSystem/Texture/Student Main Menu/My Courses.png", 399.0f, 327.0f);
 		butMyResult.loadTexture("../ManagementSystem/Texture/Student Main Menu/My Result.png", 399.0f, 454.0f);
-		butHome.loadTexture("../ManagementSystem/Texture/Student Main Menu/Home Button.png", 157.0f, 28.0f);
 	}
 	void drawTo(sf::RenderWindow &window);
 
 	void handleClicking(sf::RenderWindow &window, int &currentPage, stack<int> &pageStack);
 	
-	void handleMouseOver(sf::RenderWindow &window);
+	//void handleMouseOver(sf::RenderWindow &window);
+
+	void EventHandling(sf::RenderWindow &window,  sf::Event &ev, int &currentPage, stack<int> &pageStack);
+}; 
+
+struct StudentProfileMenu {
+	Student *pStudent = nullptr;
+	//Header:
+	Object oHeader;
+	Object oLogo;
+	Object oNameRect;
+	Button butBackButton;
+	//Button butBackButtonClicked;
+	Button butHome;
+	Button butDrop;
+	Button butDrop2;
+	Button butMyProfile;
+	Button butChangePass;
+	Button butLogOut;
+	sf::Text tName;
+	//Main:
+	Object oBG;
+	TextBox tbClassBox;
+	TextBox tbFullnameBox;
+	TextBox tbDOBBox;
+	TextBox tbGenderBox;
+	TextBox tbStIDBox;
+	TextBox tbSoID;
+	sf::Font font;
+	void setUp(Student *student) {
+		font.loadFromFile("../ManagementSystem/Poppins/Poppins-ExtraBold.ttf");
+		pStudent = student;
+		tName.setString(student->LastName + " " + student->FirstName);
+		tName.setCharacterSize(24);
+		tName.setFont(font);
+		tName.setFillColor(sf::Color::Black);
+		setTextMiddle(&tName, 1043.0f, 18.0f, 186.0f, 54.0f);
+		
+		tbFullnameBox.textbox.setString(student->LastName + " " + student->FirstName);
+		tbFullnameBox.setTextMiddle();
+		tbClassBox.textbox.setString(student->Class);
+		tbClassBox.setTextMiddle();
+		tbDOBBox.textbox.setString(student->DOB);
+		tbDOBBox.setTextMiddle();
+		tbGenderBox.textbox.setString((student->Gender ? "Male" : "Female"));
+		tbGenderBox.setTextMiddle();
+		tbStIDBox.textbox.setString(student->StID);
+		tbStIDBox.setTextMiddle();
+		tbSoID.textbox.setString("0" + student->SocialID);
+		tbSoID.setTextMiddle();
+
+	}
+	StudentProfileMenu() {
+		//Header:
+		oHeader.loadTexture("../ManagementSystem/Texture/Header/Header Rect.png", 0.0f, 0.0f);
+		oLogo.loadTexture("../ManagementSystem/Texture/Header/Fit.png", 530.0f, 6.0f);
+		oNameRect.loadTexture("../ManagementSystem/Texture/Header/Name Rect.png", 1024.0f, 18.0f);
+		butDrop.loadTexture("../ManagementSystem/Texture/Header/DropButton.png", 1217.0f, 29.0f);
+		butDrop2.loadTexture("../ManagementSystem/Texture/Header/DropButton2.png", 1217.0f, 29.0f);
+		butDrop2.hide();
+		butMyProfile.loadTexture("../ManagementSystem/Texture/Header/My Profile.png", 1024.0f, 100.0f);
+		butMyProfile.hide();
+		butChangePass.loadTexture("../ManagementSystem/Texture/Header/Change Password.png", 1024.0f, 153.0f);
+		butChangePass.hide();
+		butLogOut.loadTexture("../ManagementSystem/Texture/Header/Logout.png", 1024.0f, 207.0f);
+		butLogOut.hide();
+		butBackButton.loadTexture("../ManagementSystem/Texture/Header/Back Button.png", 23.0f, 28.0f);
+		butHome.loadTexture("../ManagementSystem/Texture/Header/Home Button.png", 186.0f, 28.0f);
+
+		//Main:
+		oBG.loadTexture("../ManagementSystem/Texture/Student Profile Menu/BG.png", 182.0f, 109.0f);
+		tbFullnameBox.loadTexture("../ManagementSystem/Texture/Student Profile Menu/FullnameBox.png", false, 464.0f, 265.0f, 30);
+		tbClassBox.loadTexture("../ManagementSystem/Texture/Student Profile Menu/ClassBox.png", false, 819.0f, 483.0f, 30);
+		tbDOBBox.loadTexture("../ManagementSystem/Texture/Student Profile Menu/DOBBox.png", false, 464.0f, 483.0f, 30);
+		tbGenderBox.loadTexture("../ManagementSystem/Texture/Student Profile Menu/GenderBox.png", false, 819.0f, 371.0f, 30);
+		tbStIDBox.loadTexture("../ManagementSystem/Texture/Student Profile Menu/StIDBox.png", false, 464.0f, 371.0f, 30);
+		tbSoID.loadTexture("../ManagementSystem/Texture/Student Profile Menu/SoIDBox.png", false, 464.0f, 584.0f, 30);
+	}
+	void drawTo(sf::RenderWindow &window);
 
 	void EventHandling(sf::RenderWindow &window, sf::Event &ev, int &currentPage, stack<int> &pageStack);
-}; 
+
+	void handleClicking(sf::RenderWindow &window, int &currentPage, stack<int> &pageStack);
+};
 

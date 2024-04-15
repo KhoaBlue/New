@@ -134,6 +134,15 @@ struct TextBox : Object {
 		else textbox.setString("");
 	}
 
+	void setTextMiddle() {
+		float x = sprite.getPosition().x;
+		float y = sprite.getPosition().y;
+		float w = sprite.getGlobalBounds().width;
+		float h = sprite.getGlobalBounds().height;
+		float PosX = (2.0 * x + w - textbox.getGlobalBounds().width) / 2.0;
+		float PosY = (2.0 * y + h - textbox.getGlobalBounds().height) / 2.0 - 8.0f;
+		textbox.setPosition({ PosX, PosY });
+	}
 	void clearText() {
 		text.str("");
 		textbox.setString("");

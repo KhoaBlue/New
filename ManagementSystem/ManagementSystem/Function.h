@@ -140,8 +140,6 @@ void outputStaffList(Node<User> *StaffHead);
 void outputStudent(Student x);
 void outputStudentList(Node<Student> *StudentHead);
 void displayClassesList(Node <Class>*& pHead, string Name, int& n);
-void addNewClasses(Class*& NewClasses, int& numOfClass);
-void addClasses(SchoolYear& sy, Class* OldClasses, int NumOldClasses);
 void initSchoolYear(SchoolYear *sy, const SchoolYear &oldSY, Class *NewClasses, int numOfNewClasses);
 bool createSchoolYear(SchoolYear *&SyList, int &numSY, string name, Class *NewClasses, int numOfNewClasses, SchoolYear *&currentSchoolYear);
 

@@ -42,12 +42,19 @@ int main() {
 	LoginMenu *loginMenu = new LoginMenu;
 	ForgotPassMenu *forgotPassMenu = new ForgotPassMenu;
 	StudentMainMenu *studentMainMenu = new StudentMainMenu;
+	StudentProfileMenu *studentProfileMenu = new StudentProfileMenu;
 	while (window.isOpen()) {
 		sf::Event ev;
 		window.clear(sf::Color::White);
 		switch (currentPage) {
 			case Login:
-				loginMenu->EventHandling(window, ev, studentMainMenu, isStaff, pUser, pStudent, currentSchoolYear, StaffHead, currentPage);
+				loginMenu->EventHandling(window, ev, isStaff, pUser, pStudent, currentSchoolYear, StaffHead, currentPage);
+				if (currentPage == StudentMain && pStudent != nullptr) {
+					studentMainMenu->setUp(&pStudent->data, currentSchoolYear);
+					studentProfileMenu->setUp(&pStudent->data);
+					//cout << pStudent->data.Email << endl;
+					//cout << "Set up successfully! " << endl;
+				}
 				loginMenu->drawTo(window);
 				break;
 			case ForgotPass:
@@ -92,11 +99,8 @@ int main() {
 				}
 				break;
 			case StudentProfile:
-				while (window.pollEvent(ev)) {
-					if (ev.type == sf::Event::Closed) {
-						window.close();
-					}
-				}
+				studentProfileMenu->EventHandling(window, ev, currentPage, pageStack);
+				studentProfileMenu->drawTo(window);
 				break;
 			case StudentChangePass:
 				while (window.pollEvent(ev)) {
@@ -113,8 +117,9 @@ int main() {
 	updateStaffToFile(StaffHead);
 	deleteStaffList(StaffHead);
 	deleteSchoolYearList(SyList, numSY);
-	//delete loginMenu;
-	//delete studentMainMenu;
-	//delete forgotPassMenu;
+	delete loginMenu;
+	delete studentMainMenu;
+	delete forgotPassMenu;
+	delete studentProfileMenu;
 	return 0;
 }

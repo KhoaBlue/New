@@ -164,11 +164,9 @@
     <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Button.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

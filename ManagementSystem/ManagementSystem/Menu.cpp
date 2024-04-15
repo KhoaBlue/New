@@ -65,7 +65,7 @@ void LoginMenu::handleTyping(sf::RenderWindow &window, sf::Event ev)
 	tbPassword.typedOn(ev);
 }
 
-void LoginMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, StudentMainMenu *studentMainMenu, bool &isStaff, Node<User> *pUser, Node<Student> *pStudent, SchoolYear *currentSchoolYear, Node<User> *StaffHead, int &currentPage)
+void LoginMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, bool &isStaff, Node<User> *pUser, Node<Student> *&pStudent, SchoolYear *currentSchoolYear, Node<User> *StaffHead, int &currentPage)
 {
 	while (window.pollEvent(ev)) {
 		if (ev.type == sf::Event::Closed) {
@@ -78,7 +78,6 @@ void LoginMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, StudentMa
 				if (checkLogin(isStaff, pUser, pStudent, username, password, currentSchoolYear, StaffHead)) {
 					if (!isStaff) {
 						currentPage = StudentMain;
-						studentMainMenu->setUp(&pStudent->data, currentSchoolYear);
 					}
 					tbUsername.clearText();
 					tbPassword.clearText();
@@ -89,6 +88,7 @@ void LoginMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, StudentMa
 					cout << "Login Failed" << endl;
 				}
 				cout << currentPage << endl;
+				cout << (pStudent == nullptr) << endl;
 			}
 			if (butForgotPW.isMouseOver(window)) {
 				tbUsername.clearText();
@@ -169,23 +169,22 @@ void ForgotPassMenu::handleTyping(sf::RenderWindow &window, sf::Event ev)
 void StudentMainMenu::drawTo(sf::RenderWindow &window)
 {
 	oHeader.drawTo(window);
-	oInfoRect.drawTo(window);
 	butMyProfile.drawTo(window);
 	butChangePass.drawTo(window);
 	butLogOut.drawTo(window);
+	butBackButton.drawTo(window);
+	butHome.drawTo(window);
+	oNameRect.drawTo(window);
+	window.draw(tName);
+	butDrop.drawTo(window);
+	butDrop2.drawTo(window);
+
+	oInfoRect.drawTo(window);
 	oPromting.drawTo(window);
 	butMyCourses.drawTo(window);
 	butMyResult.drawTo(window);
-	oNameRect.drawTo(window);
-	butDrop.drawTo(window);
-	butDrop2.drawTo(window);
-	butHome.drawTo(window);
-	butBackButton.drawTo(window);
-	butBackButtonClicked.drawTo(window);
-	butNextButton.drawTo(window);
-	butNextButtonClicked.drawTo(window);
+	//butBackButtonClicked.drawTo(window);
 	oLogo.drawTo(window);
-	window.draw(tName);
 	window.draw(tSchoolYearName);
 	window.draw(tSemester);
 	window.draw(tClass);
@@ -193,21 +192,21 @@ void StudentMainMenu::drawTo(sf::RenderWindow &window)
 }
 
 
-void StudentMainMenu::handleMouseOver(sf::RenderWindow &window)
-{
-	if (butBackButton.isMouseOver(window)) {
-		butBackButtonClicked.reveal();
-	}
-	else {
-		butBackButtonClicked.hide();
-	}
-	if (butNextButton.isMouseOver(window)) {
-		butNextButtonClicked.reveal();
-	}
-	else {
-		butNextButtonClicked.hide();
-	}
-}
+//void StudentMainMenu::handleMouseOver(sf::RenderWindow &window)
+//{
+//	if (butBackButton.isMouseOver(window)) {
+//		butBackButtonClicked.reveal();
+//	}
+//	else {
+//		butBackButtonClicked.hide();
+//	}
+//	if (butNextButton.isMouseOver(window)) {
+//		butNextButtonClicked.reveal();
+//	}
+//	else {
+//		butNextButtonClicked.hide();
+//	}
+//}
 
 void StudentMainMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, int &currentPage, stack<int> &pageStack)
 {
@@ -215,9 +214,9 @@ void StudentMainMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, int
 		if (ev.type == sf::Event::Closed) {
 			window.close();
 		}
-		if (ev.type == sf::Event::MouseMoved) {
-			handleMouseOver(window);
-		}
+		//if (ev.type == sf::Event::MouseMoved) {
+		//	handleMouseOver(window);
+		//}
 		if (ev.type == sf::Event::MouseButtonPressed) {
 			handleClicking(window, currentPage, pageStack);
 		}
@@ -270,5 +269,83 @@ void StudentMainMenu::handleClicking(sf::RenderWindow &window, int &currentPage,
 		if (pageStack.empty()) return;
 		currentPage = pageStack.top();
 		pageStack.pop();
+	}
+}
+
+void StudentProfileMenu::drawTo(sf::RenderWindow &window)
+{
+	oHeader.drawTo(window);
+	oLogo.drawTo(window);
+	butBackButton.drawTo(window);
+	butHome.drawTo(window);
+	oNameRect.drawTo(window);
+	window.draw(tName);
+	butDrop.drawTo(window);
+	butDrop2.drawTo(window);
+
+	oBG.drawTo(window);
+	tbFullnameBox.drawTo(window);
+	tbClassBox.drawTo(window);
+	tbDOBBox.drawTo(window);
+	tbSoID.drawTo(window);
+	tbGenderBox.drawTo(window);
+	tbStIDBox.drawTo(window);
+	butMyProfile.drawTo(window);
+	butChangePass.drawTo(window);
+	butLogOut.drawTo(window);
+}
+
+void StudentProfileMenu::EventHandling(sf::RenderWindow &window, sf::Event &ev, int &currentPage, stack<int> &pageStack)
+{
+	while (window.pollEvent(ev)) {
+		if (ev.type == sf::Event::Closed) {
+			window.close();
+		}
+		if (ev.type == sf::Event::MouseButtonPressed) {
+			handleClicking(window, currentPage, pageStack);
+		}
+	}
+}
+
+void StudentProfileMenu::handleClicking(sf::RenderWindow &window, int &currentPage, stack<int> &pageStack)
+{
+	if (!butMyProfile.isHiden && butMyProfile.isMouseOver(window)) {
+		pageStack.push(currentPage);
+		currentPage = StudentProfile;
+		return;
+	}
+	if (!butChangePass.isHiden && butChangePass.isMouseOver(window)) {
+		pageStack.push(currentPage);
+		currentPage = StudentChangePass;
+		return;
+	}
+	if (!butLogOut.isHiden && butLogOut.isMouseOver(window)) {
+		currentPage = Login;
+		return;
+	}
+	if (!butDrop.isHiden && butDrop.isMouseOver(window)) {
+		butMyProfile.reveal();
+		butChangePass.reveal();
+		butLogOut.reveal();
+		butDrop.hide();
+		butDrop2.reveal();
+		return;
+	}
+	if (!butDrop2.isHiden && butDrop2.isMouseOver(window)) {
+		butMyProfile.hide();
+		butChangePass.hide();
+		butLogOut.hide();
+		butDrop.reveal();
+		butDrop2.hide();
+		return;
+	}
+	if (butBackButton.isMouseOver(window)) {
+		if (pageStack.empty()) return;
+		currentPage = pageStack.top();
+		pageStack.pop();
+	}
+	if (butHome.isMouseOver(window)) {
+		pageStack.push(currentPage);
+		currentPage = StudentMain;
 	}
 }
